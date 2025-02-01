@@ -52,137 +52,185 @@ const certificateValidation = Yup.object().shape({
 });
 
 // Single item components
-const AcademicEntry = memo(({ academic, onEdit, onDelete }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.3 }}
-  >
-    <Card className="mb-3 hover-shadow">
-      <Card.Header className="d-flex justify-content-between align-items-center bg-light">
-        <div>
-          <h5 className="mb-0 text-primary">
-            {academic.education_level} - {academic.major}
-          </h5>
-          <small className="text-muted">{academic.institution}</small>
-        </div>
-        <Dropdown>
-          <Dropdown.Toggle variant="link" className="no-arrow">
-            <FiEdit className="text-muted" />
-          </Dropdown.Toggle>
-          <Dropdown.Menu align="end">
-            <Dropdown.Item onClick={onEdit}>
-              <FiEdit className="me-2" /> Edit
-            </Dropdown.Item>
-            <Dropdown.Item onClick={onDelete} className="text-danger">
-              <FiTrash2 className="me-2" /> Delete
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Card.Header>
-      <Card.Body>
-        <div className="row g-2">
-          <div className="col-md-4">
-            <label className="text-muted small">Duration</label>
-            <p className="mb-0">{academic.duration}</p>
-          </div>
-          <div className="col-md-4">
-            <label className="text-muted small">Graduation Year</label>
-            <p className="mb-0">{academic.graduation_year}</p>
-          </div>
-          <div className="col-md-4">
-            <label className="text-muted small">Result</label>
-            <p className="mb-0">{academic.result}</p>
-          </div>
-        </div>
-      </Card.Body>
-    </Card>
-  </motion.div>
-));
+interface AcademicEntryProps {
+  academic: {
+    id: string;
+    education_level: string;
+    major: string;
+    institution: string;
+    duration: string;
+    graduation_year: string;
+    result: string;
+  };
+  onEdit: () => void;
+  onDelete: () => void;
+}
 
-const TrainingEntry = memo(({ training, onEdit, onDelete }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.3 }}
-  >
-    <Card className="mb-3 hover-shadow">
-      <Card.Header className="d-flex justify-content-between align-items-center bg-light">
-        <div>
-          <h5 className="mb-0 text-primary">{training.training_title}</h5>
-          <small className="text-muted">{training.provider}</small>
-        </div>
-        <Dropdown>
-          <Dropdown.Toggle variant="link" className="no-arrow">
-            <FiEdit className="text-muted" />
-          </Dropdown.Toggle>
-          <Dropdown.Menu align="end">
-            <Dropdown.Item onClick={onEdit}>
-              <FiEdit className="me-2" /> Edit
-            </Dropdown.Item>
-            <Dropdown.Item onClick={onDelete} className="text-danger">
-              <FiTrash2 className="me-2" /> Delete
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Card.Header>
-      <Card.Body>
-        <div className="row g-2">
-          <div className="col-md-4">
-            <label className="text-muted small">Year</label>
-            <p className="mb-0">{training.year}</p>
+const AcademicEntry: React.FC<AcademicEntryProps> = memo(
+  ({ academic, onEdit, onDelete }) => (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="mb-3 hover-shadow">
+        <Card.Header className="d-flex justify-content-between align-items-center bg-light">
+          <div>
+            <h5 className="mb-0 text-primary">
+              {academic.education_level} - {academic.major}
+            </h5>
+            <small className="text-muted">{academic.institution}</small>
           </div>
-          <div className="col-md-8">
-            <label className="text-muted small">Remarks</label>
-            <p className="mb-0">{training.remarks || "N/A"}</p>
+          <Dropdown>
+            <Dropdown.Toggle variant="link" className="no-arrow">
+              <FiEdit className="text-muted" />
+            </Dropdown.Toggle>
+            <Dropdown.Menu align="end">
+              <Dropdown.Item onClick={onEdit}>
+                <FiEdit className="me-2" /> Edit
+              </Dropdown.Item>
+              <Dropdown.Item onClick={onDelete} className="text-danger">
+                <FiTrash2 className="me-2" /> Delete
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Card.Header>
+        <Card.Body>
+          <div className="row g-2">
+            <div className="col-md-4">
+              <label className="text-muted small">Duration</label>
+              <p className="mb-0">{academic.duration}</p>
+            </div>
+            <div className="col-md-4">
+              <label className="text-muted small">Graduation Year</label>
+              <p className="mb-0">{academic.graduation_year}</p>
+            </div>
+            <div className="col-md-4">
+              <label className="text-muted small">Result</label>
+              <p className="mb-0">{academic.result}</p>
+            </div>
           </div>
-        </div>
-      </Card.Body>
-    </Card>
-  </motion.div>
-));
+        </Card.Body>
+      </Card>
+    </motion.div>
+  )
+);
 
-const CertificateEntry = memo(({ certificate, onEdit, onDelete }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.3 }}
-  >
-    <Card className="mb-3 hover-shadow">
-      <Card.Header className="d-flex justify-content-between align-items-center bg-light">
-        <div>
-          <h5 className="mb-0 text-primary">{certificate.certificate_title}</h5>
-          <small className="text-muted">{certificate.issuing_authority}</small>
-        </div>
-        <Dropdown>
-          <Dropdown.Toggle variant="link" className="no-arrow">
-            <FiEdit className="text-muted" />
-          </Dropdown.Toggle>
-          <Dropdown.Menu align="end">
-            <Dropdown.Item onClick={onEdit}>
-              <FiEdit className="me-2" /> Edit
-            </Dropdown.Item>
-            <Dropdown.Item onClick={onDelete} className="text-danger">
-              <FiTrash2 className="me-2" /> Delete
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Card.Header>
-      <Card.Body>
-        <div className="row g-2">
-          <div className="col-md-6">
-            <label className="text-muted small">Date Issued</label>
-            <p className="mb-0">{certificate.date_issued}</p>
+interface TrainingEntryProps {
+  training: {
+    id: string;
+    training_title: string;
+    provider: string;
+    year: string;
+    remarks?: string;
+  };
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+const TrainingEntry: React.FC<TrainingEntryProps> = memo(
+  ({ training, onEdit, onDelete }) => (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="mb-3 hover-shadow">
+        <Card.Header className="d-flex justify-content-between align-items-center bg-light">
+          <div>
+            <h5 className="mb-0 text-primary">{training.training_title}</h5>
+            <small className="text-muted">{training.provider}</small>
           </div>
-          <div className="col-md-6">
-            <label className="text-muted small">Certificate ID</label>
-            <p className="mb-0">{certificate.certificate_id || "N/A"}</p>
+          <Dropdown>
+            <Dropdown.Toggle variant="link" className="no-arrow">
+              <FiEdit className="text-muted" />
+            </Dropdown.Toggle>
+            <Dropdown.Menu align="end">
+              <Dropdown.Item onClick={onEdit}>
+                <FiEdit className="me-2" /> Edit
+              </Dropdown.Item>
+              <Dropdown.Item onClick={onDelete} className="text-danger">
+                <FiTrash2 className="me-2" /> Delete
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Card.Header>
+        <Card.Body>
+          <div className="row g-2">
+            <div className="col-md-4">
+              <label className="text-muted small">Year</label>
+              <p className="mb-0">{training.year}</p>
+            </div>
+            <div className="col-md-8">
+              <label className="text-muted small">Remarks</label>
+              <p className="mb-0">{training.remarks || "N/A"}</p>
+            </div>
           </div>
-        </div>
-      </Card.Body>
-    </Card>
-  </motion.div>
-));
+        </Card.Body>
+      </Card>
+    </motion.div>
+  )
+);
+
+interface CertificateEntryProps {
+  certificate: {
+    id: string;
+    certificate_title: string;
+    issuing_authority: string;
+    date_issued: string;
+    certificate_id?: string;
+  };
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+const CertificateEntry: React.FC<CertificateEntryProps> = memo(
+  ({ certificate, onEdit, onDelete }) => (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="mb-3 hover-shadow">
+        <Card.Header className="d-flex justify-content-between align-items-center bg-light">
+          <div>
+            <h5 className="mb-0 text-primary">
+              {certificate.certificate_title}
+            </h5>
+            <small className="text-muted">
+              {certificate.issuing_authority}
+            </small>
+          </div>
+          <Dropdown>
+            <Dropdown.Toggle variant="link" className="no-arrow">
+              <FiEdit className="text-muted" />
+            </Dropdown.Toggle>
+            <Dropdown.Menu align="end">
+              <Dropdown.Item onClick={onEdit}>
+                <FiEdit className="me-2" /> Edit
+              </Dropdown.Item>
+              <Dropdown.Item onClick={onDelete} className="text-danger">
+                <FiTrash2 className="me-2" /> Delete
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Card.Header>
+        <Card.Body>
+          <div className="row g-2">
+            <div className="col-md-6">
+              <label className="text-muted small">Date Issued</label>
+              <p className="mb-0">{certificate.date_issued}</p>
+            </div>
+            <div className="col-md-6">
+              <label className="text-muted small">Certificate ID</label>
+              <p className="mb-0">{certificate.certificate_id || "N/A"}</p>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </motion.div>
+  )
+);
 
 // Main component
 const ProfileEditEducation: React.FC = () => {
@@ -245,31 +293,34 @@ const ProfileEditEducation: React.FC = () => {
     [currentUser, setCurrentUser, navigate]
   );
 
-  const confirmDelete = useCallback((index, remove, label) => {
-    toast(
-      <div>
-        <p>Delete this {label} entry?</p>
-        <div className="d-flex gap-2 mt-2">
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={() => {
-              remove(index);
-              toast.dismiss();
-            }}
-          >
-            Delete
-          </button>
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => toast.dismiss()}
-          >
-            Cancel
-          </button>
-        </div>
-      </div>,
-      { icon: <span>⚠️</span> }
-    );
-  }, []);
+  const confirmDelete = useCallback(
+    (index: number, remove: (index: number) => void, label: string) => {
+      toast(
+        <div>
+          <p>Delete this {label} entry?</p>
+          <div className="d-flex gap-2 mt-2">
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={() => {
+                remove(index);
+                toast.dismiss();
+              }}
+            >
+              Delete
+            </button>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => toast.dismiss()}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>,
+        { icon: <span>⚠️</span> }
+      );
+    },
+    []
+  );
 
   return (
     <Formik
@@ -333,19 +384,24 @@ const ProfileEditEducation: React.FC = () => {
                   <FieldArray name="academics">
                     {({ push, remove, replace }) => (
                       <>
-                        {values.academics.map((academic, index) => (
-                          <AcademicEntry
-                            key={academic.id}
-                            academic={academic}
-                            onEdit={() => {
-                              setEditIndex(index);
-                              setShowModal(true);
-                            }}
-                            onDelete={() =>
-                              confirmDelete(index, remove, "academic")
-                            }
-                          />
-                        ))}
+                        {values.academics.map(
+                          (
+                            academic: AcademicEntryProps["academic"],
+                            index: number
+                          ) => (
+                            <AcademicEntry
+                              key={academic.id}
+                              academic={academic}
+                              onEdit={() => {
+                                setEditIndex(index);
+                                setShowModal(true);
+                              }}
+                              onDelete={() =>
+                                confirmDelete(index, remove, "academic")
+                              }
+                            />
+                          )
+                        )}
                         <AcademicModal
                           show={showModal}
                           onHide={() => setShowModal(false)}
@@ -412,19 +468,24 @@ const ProfileEditEducation: React.FC = () => {
                   <FieldArray name="trainings">
                     {({ push, remove, replace }) => (
                       <>
-                        {values.trainings.map((training, index) => (
-                          <TrainingEntry
-                            key={training.id}
-                            training={training}
-                            onEdit={() => {
-                              setEditTrainIndex(index);
-                              setShowTrainingsModal(true);
-                            }}
-                            onDelete={() =>
-                              confirmDelete(index, remove, "training")
-                            }
-                          />
-                        ))}
+                        {values.trainings.map(
+                          (
+                            training: TrainingEntryProps["training"],
+                            index: number
+                          ) => (
+                            <TrainingEntry
+                              key={training.id}
+                              training={training}
+                              onEdit={() => {
+                                setEditTrainIndex(index);
+                                setShowTrainingsModal(true);
+                              }}
+                              onDelete={() =>
+                                confirmDelete(index, remove, "training")
+                              }
+                            />
+                          )
+                        )}
                         <TrainingsModal
                           show={showTrainingsModal}
                           onHide={() => setShowTrainingsModal(false)}
@@ -494,19 +555,24 @@ const ProfileEditEducation: React.FC = () => {
                   <FieldArray name="certifications">
                     {({ push, remove, replace }) => (
                       <>
-                        {values.certifications.map((certificate, index) => (
-                          <CertificateEntry
-                            key={certificate.id}
-                            certificate={certificate}
-                            onEdit={() => {
-                              setEditCertIndex(index);
-                              setShowCertModal(true);
-                            }}
-                            onDelete={() =>
-                              confirmDelete(index, remove, "certificate")
-                            }
-                          />
-                        ))}
+                        {values.certifications.map(
+                          (
+                            certificate: CertificateEntryProps["certificate"],
+                            index: number
+                          ) => (
+                            <CertificateEntry
+                              key={certificate.id}
+                              certificate={certificate}
+                              onEdit={() => {
+                                setEditCertIndex(index);
+                                setShowCertModal(true);
+                              }}
+                              onDelete={() =>
+                                confirmDelete(index, remove, "certificate")
+                              }
+                            />
+                          )
+                        )}
                         <CertificateModal
                           show={showCertModal}
                           onHide={() => setShowCertModal(false)}
@@ -567,258 +633,285 @@ const ProfileEditEducation: React.FC = () => {
 };
 
 // Modals
-const AcademicModal = memo(({ show, onHide, onSubmit, initialValues }) => (
-  <Modal show={show} onHide={onHide} centered size="lg">
-    <Formik
-      initialValues={
-        initialValues || {
-          id: Math.random().toString(36).substr(2, 9),
-          education_level: "",
-          major: "",
-          institution: "",
-          duration: "",
-          graduation_year: "",
-          result: "",
-        }
-      }
-      validationSchema={academicValidation}
-      onSubmit={onSubmit}
-      validateOnChange={false}
-    >
-      {({ handleSubmit, isValidating }) => (
-        <>
-          <Modal.Header closeButton className="bg-light">
-            <Modal.Title>
-              {initialValues ? "Edit Education" : "Add New Education"}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <Field
-                  name="education_level"
-                  label="Education Level"
-                  component={(props: any) => (
-                    <SelectInput
-                      {...props}
-                      options={educationLevels}
-                      placeholder="Select"
-                    />
-                  )}
-                />
-              </div>
-              <div className="col-md-6">
-                <Field
-                  name="major"
-                  label="Major/Concentration"
-                  placeholder="e.g. Computer Science"
-                  component={TextInput}
-                />
-              </div>
-              <div className="col-md-12">
-                <Field
-                  name="institution"
-                  label="Institution Name"
-                  placeholder="University of Example"
-                  component={TextInput}
-                />
-              </div>
-              <div className="col-md-4">
-                <Field
-                  name="duration"
-                  label="Duration"
-                  placeholder="e.g. 4 years"
-                  component={TextInput}
-                />
-              </div>
-              <div className="col-md-4">
-                <Field
-                  name="graduation_year"
-                  label="Graduation Year"
-                  placeholder="2020"
-                  component={TextInput}
-                />
-              </div>
-              <div className="col-md-4">
-                <Field
-                  name="result"
-                  label="Result"
-                  placeholder="e.g. GPA 3.8"
-                  component={TextInput}
-                />
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer className="border-0">
-            <Button variant="secondary" onClick={onHide}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => handleSubmit()}
-              disabled={isValidating}
-            >
-              {initialValues ? "Save Changes" : "Add Education"}
-            </Button>
-          </Modal.Footer>
-        </>
-      )}
-    </Formik>
-  </Modal>
-));
+interface AcademicModalProps {
+  show: boolean;
+  onHide: () => void;
+  onSubmit: (vals: any) => void;
+  initialValues: any;
+}
 
-const TrainingsModal = memo(({ show, onHide, onSubmit, initialValues }) => (
-  <Modal show={show} onHide={onHide} centered size="lg">
-    <Formik
-      initialValues={
-        initialValues || {
-          id: Math.random().toString(36).substr(2, 9),
-          training_title: "",
-          provider: "",
-          year: "",
-          remarks: "",
+const AcademicModal: React.FC<AcademicModalProps> = memo(
+  ({ show, onHide, onSubmit, initialValues }) => (
+    <Modal show={show} onHide={onHide} centered size="lg">
+      <Formik
+        initialValues={
+          initialValues || {
+            id: Math.random().toString(36).substr(2, 9),
+            education_level: "",
+            major: "",
+            institution: "",
+            duration: "",
+            graduation_year: "",
+            result: "",
+          }
         }
-      }
-      validationSchema={trainingValidation}
-      onSubmit={onSubmit}
-      validateOnChange={false}
-    >
-      {({ handleSubmit, isValidating }) => (
-        <>
-          <Modal.Header closeButton className="bg-light">
-            <Modal.Title>
-              {initialValues ? "Edit Training" : "Add New Training"}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <Field
-                  name="training_title"
-                  label="Training Title"
-                  placeholder="e.g. Project Management"
-                  component={TextInput}
-                />
+        validationSchema={academicValidation}
+        onSubmit={onSubmit}
+        validateOnChange={false}
+      >
+        {({ handleSubmit, isValidating }) => (
+          <>
+            <Modal.Header closeButton className="bg-light">
+              <Modal.Title>
+                {initialValues ? "Edit Education" : "Add New Education"}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <Field
+                    name="education_level"
+                    label="Education Level"
+                    component={(props: any) => (
+                      <SelectInput
+                        {...props}
+                        options={educationLevels}
+                        placeholder="Select"
+                      />
+                    )}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    name="major"
+                    label="Major/Concentration"
+                    placeholder="e.g. Computer Science"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-12">
+                  <Field
+                    name="institution"
+                    label="Institution Name"
+                    placeholder="University of Example"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <Field
+                    name="duration"
+                    label="Duration"
+                    placeholder="e.g. 4 years"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <Field
+                    name="graduation_year"
+                    label="Graduation Year"
+                    placeholder="2020"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <Field
+                    name="result"
+                    label="Result"
+                    placeholder="e.g. GPA 3.8"
+                    component={TextInput}
+                  />
+                </div>
               </div>
-              <div className="col-md-6">
-                <Field
-                  name="provider"
-                  label="Provider"
-                  placeholder="e.g. ABC Institute"
-                  component={TextInput}
-                />
-              </div>
-              <div className="col-md-6">
-                <Field
-                  name="year"
-                  label="Year"
-                  placeholder="2021"
-                  component={TextInput}
-                />
-              </div>
-              <div className="col-md-6">
-                <Field
-                  name="remarks"
-                  label="Remarks"
-                  placeholder="Any relevant notes..."
-                  component={TextInput}
-                />
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer className="border-0">
-            <Button variant="secondary" onClick={onHide}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => handleSubmit()}
-              disabled={isValidating}
-            >
-              {initialValues ? "Save Changes" : "Add Training"}
-            </Button>
-          </Modal.Footer>
-        </>
-      )}
-    </Formik>
-  </Modal>
-));
+            </Modal.Body>
+            <Modal.Footer className="border-0">
+              <Button variant="secondary" onClick={onHide}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => handleSubmit()}
+                disabled={isValidating}
+              >
+                {initialValues ? "Save Changes" : "Add Education"}
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
+      </Formik>
+    </Modal>
+  )
+);
 
-const CertificateModal = memo(({ show, onHide, onSubmit, initialValues }) => (
-  <Modal show={show} onHide={onHide} centered size="lg">
-    <Formik
-      initialValues={
-        initialValues || {
-          id: Math.random().toString(36).substr(2, 9),
-          certificate_title: "",
-          issuing_authority: "",
-          date_issued: "",
-          certificate_id: "",
+interface TrainingsModalProps {
+  show: boolean;
+  onHide: () => void;
+  onSubmit: (vals: any) => void;
+  initialValues: any;
+}
+
+const TrainingsModal: React.FC<TrainingsModalProps> = memo(
+  ({ show, onHide, onSubmit, initialValues }) => (
+    <Modal show={show} onHide={onHide} centered size="lg">
+      <Formik
+        initialValues={
+          initialValues || {
+            id: Math.random().toString(36).substr(2, 9),
+            training_title: "",
+            provider: "",
+            year: "",
+            remarks: "",
+          }
         }
-      }
-      validationSchema={certificateValidation}
-      onSubmit={onSubmit}
-      validateOnChange={false}
-    >
-      {({ handleSubmit, isValidating }) => (
-        <>
-          <Modal.Header closeButton className="bg-light">
-            <Modal.Title>
-              {initialValues ? "Edit Certificate" : "Add New Certificate"}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <Field
-                  name="certificate_title"
-                  label="Certificate Title"
-                  placeholder="e.g. Certified Network Admin"
-                  component={TextInput}
-                />
+        validationSchema={trainingValidation}
+        onSubmit={onSubmit}
+        validateOnChange={false}
+      >
+        {({ handleSubmit, isValidating }) => (
+          <>
+            <Modal.Header closeButton className="bg-light">
+              <Modal.Title>
+                {initialValues ? "Edit Training" : "Add New Training"}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <Field
+                    name="training_title"
+                    label="Training Title"
+                    placeholder="e.g. Project Management"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    name="provider"
+                    label="Provider"
+                    placeholder="e.g. ABC Institute"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    name="year"
+                    label="Year"
+                    placeholder="2021"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    name="remarks"
+                    label="Remarks"
+                    placeholder="Any relevant notes..."
+                    component={TextInput}
+                  />
+                </div>
               </div>
-              <div className="col-md-6">
-                <Field
-                  name="issuing_authority"
-                  label="Issuing Authority"
-                  placeholder="e.g. Cisco"
-                  component={TextInput}
-                />
+            </Modal.Body>
+            <Modal.Footer className="border-0">
+              <Button variant="secondary" onClick={onHide}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => handleSubmit()}
+                disabled={isValidating}
+              >
+                {initialValues ? "Save Changes" : "Add Training"}
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
+      </Formik>
+    </Modal>
+  )
+);
+
+interface CertificateModalProps {
+  show: boolean;
+  onHide: () => void;
+  onSubmit: (vals: any) => void;
+  initialValues: any;
+}
+
+const CertificateModal: React.FC<CertificateModalProps> = memo(
+  ({ show, onHide, onSubmit, initialValues }) => (
+    <Modal show={show} onHide={onHide} centered size="lg">
+      <Formik
+        initialValues={
+          initialValues || {
+            id: Math.random().toString(36).substr(2, 9),
+            certificate_title: "",
+            issuing_authority: "",
+            date_issued: "",
+            certificate_id: "",
+          }
+        }
+        validationSchema={certificateValidation}
+        onSubmit={onSubmit}
+        validateOnChange={false}
+      >
+        {({ handleSubmit, isValidating }) => (
+          <>
+            <Modal.Header closeButton className="bg-light">
+              <Modal.Title>
+                {initialValues ? "Edit Certificate" : "Add New Certificate"}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <Field
+                    name="certificate_title"
+                    label="Certificate Title"
+                    placeholder="e.g. Certified Network Admin"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    name="issuing_authority"
+                    label="Issuing Authority"
+                    placeholder="e.g. Cisco"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    name="date_issued"
+                    label="Date Issued"
+                    placeholder="2022-05-10"
+                    component={TextInput}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    name="certificate_id"
+                    label="Certificate ID"
+                    placeholder="Optional"
+                    component={TextInput}
+                  />
+                </div>
               </div>
-              <div className="col-md-6">
-                <Field
-                  name="date_issued"
-                  label="Date Issued"
-                  placeholder="2022-05-10"
-                  component={TextInput}
-                />
-              </div>
-              <div className="col-md-6">
-                <Field
-                  name="certificate_id"
-                  label="Certificate ID"
-                  placeholder="Optional"
-                  component={TextInput}
-                />
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer className="border-0">
-            <Button variant="secondary" onClick={onHide}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => handleSubmit()}
-              disabled={isValidating}
-            >
-              {initialValues ? "Save Changes" : "Add Certificate"}
-            </Button>
-          </Modal.Footer>
-        </>
-      )}
-    </Formik>
-  </Modal>
-));
+            </Modal.Body>
+            <Modal.Footer className="border-0">
+              <Button variant="secondary" onClick={onHide}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => handleSubmit()}
+                disabled={isValidating}
+              >
+                {initialValues ? "Save Changes" : "Add Certificate"}
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
+      </Formik>
+    </Modal>
+  )
+);
 
 export default ProfileEditEducation;

@@ -58,7 +58,7 @@ const ProfileEditBio: React.FC = () => {
     setErrorMessage("");
     setSuccessMessage("");
     setIsLoading(true);
-    const submitAction = values.submitAction || "save";
+    const submitAction = values?.submitAction || "save";
     try {
       const resp = await http_post("profile", values);
       const data = ProfileModel.fromJson(JSON.stringify(resp));
@@ -81,7 +81,7 @@ const ProfileEditBio: React.FC = () => {
 
   return (
     <Formik
-      initialValues={{ ...currentUser, submitAction: "" }}
+      initialValues={currentUser}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiSave } from "react-icons/fi";
 import { useAuth } from "../../../modules/auth";
 import { http_post } from "../../../services/Api";
-import { JobMondel } from "../../../models/JobModel";
+import { JobModel } from "../../../models/JobModel";
 import {
   TextInput,
   SelectInput,
@@ -97,16 +97,16 @@ const JobCreatePage1: React.FC = () => {
     }
   }, [currentUser, navigate]);
 
-  const initialValues = new JobMondel();
+  const initialValues = new JobModel();
 
-  const handleSubmit = async (values: JobMondel, actions: any) => {
+  const handleSubmit = async (values: JobModel, actions: any) => {
     setErrorMessage("");
     setSuccessMessage("");
     setIsLoading(true);
 
     try {
       const response = await http_post("jobs", values);
-      const jobData = JobMondel.fromJson(JSON.stringify(response.data));
+      const jobData = JobModel.fromJson(JSON.stringify(response.data));
       toast.success("Job submitted successfully");
       navigate("admin/jobs");
     } catch (error: any) {

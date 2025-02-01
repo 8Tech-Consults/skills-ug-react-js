@@ -150,6 +150,7 @@ export class ProfileModel {
   company_ownership_type!: string;
   company_status!: string;
   is_company!: string;
+  submitAction: string | undefined;
 
   /**
    * Updates the profile fields with provided data.

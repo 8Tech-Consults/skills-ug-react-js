@@ -74,7 +74,7 @@ const ProfileEditPhoto: React.FC = () => {
 
   return (
     <Formik
-      initialValues={{ ...currentUser, submitAction: "" }}
+      initialValues={currentUser}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >

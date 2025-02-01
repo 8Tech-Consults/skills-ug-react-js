@@ -1,5 +1,4 @@
 import axios from "axios";
-import { UserModel } from "./_models";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/verify_token`;

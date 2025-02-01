@@ -13,7 +13,7 @@ import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar"
 import { Content } from "../../../../_metronic/layout/components/content";
 
 import { TextInput, SelectInput } from "../../../components/FormComponents";
-import { JobMondel } from "../../../models/JobModel";
+import { JobModel } from "../../../models/JobModel";
 
 interface JobsPageProps {}
 
@@ -54,14 +54,14 @@ const JobsPage: React.FC<JobsPageProps> = () => {
   const { currentUser } = useAuth();
 
   // States
-  const [jobs, setJobs] = useState<JobMondel[]>([]);
+  const [jobs, setJobs] = useState<JobModel[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchFilter, setSearchFilter] = useState(defaultSearchValues);
 
   // For viewing job details in a modal
-  const [selectedJob, setSelectedJob] = useState<JobMondel | null>(null);
+  const [selectedJob, setSelectedJob] = useState<JobModel | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   // Fetch user’s jobs on mount / filter change
@@ -88,7 +88,7 @@ const JobsPage: React.FC<JobsPageProps> = () => {
       if (filter.status) params.status = filter.status;
       if (filter.category_id) params.category_id = filter.category_id;
 
-      const paginatedResult = await JobMondel.fetchMyJobs(page, params);
+      const paginatedResult = await JobModel.fetchMyJobs(page, params);
       const { data, current_page, last_page } = paginatedResult;
 
       setJobs(data);
@@ -111,11 +111,11 @@ const JobsPage: React.FC<JobsPageProps> = () => {
   /**
    * Handle job deletion
    */
-  const handleDelete = async (job: JobMondel) => {
+  const handleDelete = async (job: JobModel) => {
     try {
       const confirmMsg = `Are you sure you want to delete job: ${job.title}?`;
       if (window.confirm(confirmMsg)) {
-        await JobMondel.deleteJob(job.id);
+        await JobModel.deleteJob(job.id);
         toast.success("Job deleted successfully!");
         fetchMyJobs(currentPage, searchFilter);
       }
@@ -127,7 +127,7 @@ const JobsPage: React.FC<JobsPageProps> = () => {
   /**
    * Displays the modal for job details
    */
-  const viewJobDetails = (job: JobMondel) => {
+  const viewJobDetails = (job: JobModel) => {
     setSelectedJob(job);
     setShowModal(true);
   };
