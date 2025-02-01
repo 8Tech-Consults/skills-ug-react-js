@@ -77,21 +77,20 @@ const AuthLayout = () => {
 
           {/* Title */}
           <h1 className="text-white fs-2qx fw-bolder text-center mb-7">
-            Fast, Efficient and Productive
+            Largets Job Portal - in Uganda
           </h1>
 
           {/* Description */}
           <div className="text-white fs-base text-center">
-            In this kind of post,{" "}
+            Welcome to Uganda's largest job portal.{" "}
             <a href="#" className="opacity-75-hover text-warning fw-bold me-1">
-              the blogger
+              Explore jobs
             </a>
-            introduces a person they’ve interviewed and provides some background
-            information about
+            and find your dream career. For employers,{" "}
             <a href="#" className="opacity-75-hover text-warning fw-bold me-1">
-              the interviewee
+              post job listings
             </a>
-            and their work following this is a transcript of the interview.
+            and connect with top talent.
           </div>
         </div>
       </div>
