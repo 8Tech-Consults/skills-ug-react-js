@@ -16,7 +16,6 @@ import {
 } from "../../_metronic/layout/core";
 import { adminLayoutConfig } from "../../_metronic/layout/core/layoutConfigs";
 import CompanyProfileEditPage from "../pages/private/profile-edit/CompanyProfileEditPage";
-
 const LAYOUT_CONFIG_KEY =
   import.meta.env.VITE_APP_BASE_LAYOUT_CONFIG_KEY || "LayoutConfig";
 
@@ -25,6 +24,7 @@ const PrivateRoutes = () => {
     () => import("../pages/private/profile-edit/ProfileEditPage")
   );
 
+  const MyCVPage = lazy(() => import("../pages/private/MyCVPage"));
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
   const WizardsPage = lazy(() => import("../modules/wizards/WizardsPage"));
   const AccountPage = lazy(() => import("../modules/accounts/AccountPage"));
@@ -96,6 +96,14 @@ const PrivateRoutes = () => {
         <Route path="builder" element={<BuilderPageWrapper />} />
         <Route path="menu-test" element={<MenuTestPage />} />
         {/* Lazy Modules */}
+        <Route
+          path="my-cv"
+          element={
+            <SuspensedView>
+              <MyCVPage />
+            </SuspensedView>
+          }
+        />
         <Route
           path="jobs"
           element={

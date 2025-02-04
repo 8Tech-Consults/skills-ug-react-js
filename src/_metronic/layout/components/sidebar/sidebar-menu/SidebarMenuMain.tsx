@@ -2,6 +2,7 @@ import { useIntl } from "react-intl";
 import { KTIcon } from "../../../../helpers";
 import { SidebarMenuItemWithSub } from "./SidebarMenuItemWithSub";
 import { SidebarMenuItem } from "./SidebarMenuItem";
+import { Zoom } from "react-toastify";
 
 const SidebarMenuMain = () => {
   const intl = useIntl();
@@ -14,24 +15,202 @@ const SidebarMenuMain = () => {
         title={intl.formatMessage({ id: "MENU.DASHBOARD" })}
         fontIcon="bi-app-indicator"
       />
+      <SidebarMenuItemWithSub
+        to="/crafted/pages/profile"
+        title="Manage My Profile"
+        hasBullet={false}
+        icon="media/icons/duotune/general/gen011.svg"
+        fontIcon="bi-app-indicator"
+      >
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Profile Photo"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/bio"
+          title="Biodata"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/education"
+          title="Education & Trainings"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/employment"
+          title="Employment"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/accomplishment"
+          title="Accomplishments"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/my-cv"
+          title="View my profile"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/accomplishment"
+          title="Download my CV"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/accomplishment"
+          title="Email my CV"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+
+      <SidebarMenuItemWithSub
+        to="/crafted/pages/profile"
+        title="My Activities"
+        hasBullet={false}
+        icon="media/icons/duotune/maps/map009.svg"
+        fontIcon="bi-app-indicator"
+      >
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="My Job Applications"
+          hasBullet={true}
+        />
+
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Shortlisted "
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Job Offers"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Followed Companies"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="My CV views"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="My Emailed CVs"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+
+      <SidebarMenuItemWithSub
+        to="/crafted/pages/profile"
+        title="Company activities"
+        hasBullet={false}
+        icon="media/icons/duotune/general/gen019.svg"
+        fontIcon="bi-app-indicator"
+      >
+        <SidebarMenuItem
+          to="/admin/job-create"
+          title="Post a Job"
+          hasBullet={true}
+        />
+
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Posted Jobs"
+          hasBullet={true}
+        />
+
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Job Applications"
+          hasBullet={true}
+        />
+
+        <SidebarMenuItem
+          to="/admin/company-profile-edit"
+          title="Create/Update Company Profile"
+          hasBullet={true}
+        />
+
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Job Applications"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Shortlisted Candidates"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Job Offers"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Followed Candidates"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Company Profile Views"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/profile-edit/photo"
+          title="Emailed CVs"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+
+      <SidebarMenuItemWithSub
+        to="/crafted/pages/profile"
+        title="8Learning"
+        hasBullet={false}
+        icon="media/icons/duotune/graphs/gra006.svg"
+        fontIcon="bi-app-indicator"
+      >
+        <SidebarMenuItem
+          to="/admin/job-create"
+          title="My Courses"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+
+      <SidebarMenuItemWithSub
+        to="/crafted/pages/profile"
+        title="My Account"
+        hasBullet={false}
+        icon="media/icons/duotune/communication/com006.svg"
+        fontIcon="bi-app-indicator"
+      >
+        <SidebarMenuItem
+          to="/admin/job-create"
+          title="Update Email"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/job-create"
+          title="Change password"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/job-create"
+          title="Logout"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+
       <SidebarMenuItem
         to="/admin/job-create"
-        icon="switch"
-        title="Create new job"
-        fontIcon="bi-layers"
+        title="Help Videos"
+        hasBullet={true}
       />
-      <SidebarMenuItem
-        to="/admin/company-profile-edit"
-        icon="switch"
-        title="Company profile edit"
-        fontIcon="bi-layers"
-      />
-      <SidebarMenuItem
-        to="/admin/profile-edit"
-        icon="switch"
-        title="Profile Edit"
-        fontIcon="bi-layers"
-      />
+
       {/*
       <SidebarMenuItem
         to="/builder"
