@@ -19,6 +19,8 @@ import { http_post } from "../../../../services/Api";
 import Utils from "../../../../services/Utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowRight, FiSave } from "react-icons/fi";
+import { DistrictModel } from "../../../../models/DistrictModel";
+import { ManifestModel } from "../../../../models/Manifest";
 
 const fadeVariant = {
   hidden: { opacity: 0, y: 10 },
@@ -39,6 +41,12 @@ const ProfileEditBio: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setCurrentUser } = useAuth();
   const { currentUser } = useAuth();
+  const [districts, setDistricts] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [job_categories, setJobCategories] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   if (!currentUser) {
     alert("User not found");
@@ -54,6 +62,49 @@ const ProfileEditBio: React.FC = () => {
     title: Yup.string().required("Title is required"),
   });
 
+  useEffect(() => {
+    load_districts();
+  }, []);
+
+  const load_districts = async () => {
+    var man = await ManifestModel.getItems();
+    if (man != null && man["CATEGORIES"] != null) {
+      var temp_cats = [];
+      //loop through the man["CATEGORIES"]
+      for (var key in man["CATEGORIES"]) {
+        var temp = man["CATEGORIES"][key];
+        if (temp == null) continue;
+        temp_cats.push({ value: temp["id"], label: temp["name"] });
+      }
+      if (temp_cats.length > 0) {
+        setJobCategories(temp_cats);
+      } else {
+        alert("No job categories found");
+      }
+    }
+
+    var _districts = [];
+    try {
+      _districts = await DistrictModel.getItems();
+    } catch (error) {
+      alert("Failed to load districts: " + error);
+      return;
+    }
+
+    if (_districts.length < 1) {
+      alert("No districts found");
+      return;
+    }
+
+    setDistricts([]);
+    let districts_1 = [];
+    for (const item of _districts) {
+      if (item.name) {
+        districts_1.push({ value: item.id + "", label: item.name });
+      }
+    }
+    setDistricts(districts_1);
+  };
   const handleSubmit = async (values: typeof currentUser, actions: any) => {
     setErrorMessage("");
     setSuccessMessage("");
@@ -128,6 +179,14 @@ const ProfileEditBio: React.FC = () => {
                 </motion.div>
               )}
 
+              {/*      <button
+                type="button"
+                className="btn btn-lg btn-info"
+                onClick={() => load_districts()}
+              >
+                collect data
+              </button>
+ */}
               {successMessage && (
                 <motion.div
                   className="alert alert-success alert-dismissible fade show"
@@ -534,6 +593,15 @@ const ProfileEditBio: React.FC = () => {
                       <div className="row mb-3">
                         <div className="col-md-6">
                           <Field
+                            name="district_id"
+                            label="District"
+                            placeholder="District of Residence"
+                            options={districts}
+                            component={SelectInput}
+                          />
+                        </div>
+                        <div className="col-md-6">
+                          <Field
                             name="home_address"
                             label="Home Address"
                             placeholder="Permanent or Family Residence"
@@ -675,17 +743,17 @@ const ProfileEditBio: React.FC = () => {
                       <div className="row mb-3">
                         <div className="col-md-6">
                           <Field
-                            name="objective"
-                            label="Objective"
-                            placeholder="Your career objective"
-                            component={TextArea}
+                            name="special_qualification"
+                            label="Job Designation"
+                            placeholder="e.g. Software Engineer, Business Analyst, etc."
+                            component={TextInput}
                           />
                         </div>
                         <div className="col-md-6">
                           <Field
-                            name="special_qualification"
-                            label="Special Qualification"
-                            placeholder="Any special qualifications"
+                            name="objective"
+                            label="Career Objective"
+                            placeholder="Briefly describe your career objective"
                             component={TextArea}
                           />
                         </div>
@@ -725,8 +793,8 @@ const ProfileEditBio: React.FC = () => {
                         <div className="col-md-6">
                           <Field
                             name="expected_job_level"
-                            label="Expected Job Level"
-                            placeholder="Junior / Mid / Senior / Manager"
+                            label="Expected Job"
+                            placeholder="e.g. Software Engineer, Business Analyst, etc."
                             component={TextInput}
                           />
                         </div>
@@ -752,9 +820,10 @@ const ProfileEditBio: React.FC = () => {
                         <div className="col-md-6">
                           <Field
                             name="preferred_job_category"
-                            label="Preferred Job Category"
+                            label="Select Preferred Job Category"
                             placeholder="e.g. IT, Finance, Marketing"
-                            component={TextInput}
+                            options={job_categories}
+                            component={SelectInput}
                           />
                         </div>
                       </div>

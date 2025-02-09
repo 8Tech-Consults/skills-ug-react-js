@@ -123,6 +123,8 @@ export class ProfileModel {
   blood_group: string = "";
   height: string = "";
   weight: string = "";
+  district_id: string = "";
+  district_text: string = "";
 
   company_name!: string;
   company_year_of_establishment!: string;

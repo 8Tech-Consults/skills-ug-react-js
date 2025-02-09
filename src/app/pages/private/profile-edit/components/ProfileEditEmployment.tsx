@@ -118,7 +118,9 @@ const EmploymentEntry = memo(
           </motion.div>
           <motion.div layout className="row g-2 mt-2">
             <div className="col-md-6">
-              <label className="text-muted small">Employment Period</label>
+              <label className="text-muted small">
+                Employment Period (in Years)
+              </label>
               <p className="mb-0">{employment.employmentPeriod}</p>
             </div>
             <div className="col-md-6">
@@ -437,7 +439,7 @@ const EmploymentModal = memo(
                   <div className="col-md-6">
                     <Field
                       name="employmentPeriod"
-                      label="Employment Period"
+                      label="Employment Period (in Years)"
                       placeholder="e.g. 2 Years"
                       component={TextInput}
                     />

@@ -96,7 +96,6 @@ class Utils {
 
     var last_segment = "";
     try {
-      console.log(url);
       last_segment = url.split("/").pop() || "";
     } catch (error) {
       confirm("Error: " + error);
@@ -118,6 +117,49 @@ class Utils {
       return "";
     }
     return BASE_URL + "/storage/images/" + last_segment;
+  }
+
+  static file(url: any) {
+    var default_img = BASE_URL + "/storage/images/default.png";
+    if (url === null) {
+      return default_img;
+    }
+    if (url === undefined) {
+      return default_img;
+    }
+    if (url === "undefined") {
+      return default_img;
+    }
+    if (url === "") {
+      return default_img;
+    }
+    if (url === "null") {
+      return default_img;
+    }
+
+    var last_segment = "";
+    try {
+      last_segment = url.split("/").pop() || "";
+    } catch (error) {
+      confirm("Error: " + error);
+      return "";
+    }
+    if (last_segment === "undefined") {
+      return "";
+    }
+    if (last_segment === "null") {
+      return "";
+    }
+    if (last_segment === "") {
+      return "";
+    }
+    if (last_segment === null) {
+      return "";
+    }
+    if (last_segment === undefined) {
+      return "";
+    }
+    return BASE_URL + "/storage/files/" + last_segment;
   }
 }
 

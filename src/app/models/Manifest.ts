@@ -1,6 +1,7 @@
 import Utils from "../services/Utils";
 import { http_get } from "../services/Api";
 import { BASE_URL, LOCAL_MANIFEST } from "../../Constants";
+import { DistrictModel } from "./DistrictModel";
 
 export class ManifestModel {
   LIVE_JOBS = "0";

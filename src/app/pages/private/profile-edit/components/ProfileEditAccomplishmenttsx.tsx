@@ -155,8 +155,8 @@ const ProfileEditAccomplishment = () => {
   }
 
   const initialValues = {
-    accomplishments: currentUser?.primary_school_name
-      ? JSON.parse(currentUser.primary_school_name)
+    accomplishments: currentUser?.school_pay_payment_code
+      ? JSON.parse(currentUser.school_pay_payment_code)
       : [],
     submitAction: "",
   };
@@ -167,9 +167,12 @@ const ProfileEditAccomplishment = () => {
       try {
         const updatedUser = {
           ...currentUser,
-          accomplishments: JSON.stringify(values.accomplishments),
+          school_pay_payment_code: JSON.stringify(values.accomplishments),
         };
-        const resp = await http_post("profile", updatedUser);
+        const resp = await http_post("profile", {
+          school_pay_payment_code: JSON.stringify(values.accomplishments),
+        });
+
         const data = ProfileModel.fromJson(JSON.stringify(resp));
         Utils.saveProfile(data);
 
