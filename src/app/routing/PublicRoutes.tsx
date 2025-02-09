@@ -19,6 +19,7 @@ const PublicRoutes = () => {
   const JobDetailPage = lazy(() => import("../pages/public/JobDetailPage"));
   const ApplyJobPage = lazy(() => import("../pages/public/ApplyJobPage"));
   const CvBankPage = lazy(() => import("../pages/public/CvBankPage"));
+  const CvPDFPage = lazy(() => import("../pages/public/CvPDFPage"));
   const EmployersPage = lazy(() => import("../pages/public/EmployersPage"));
   const [tab, setTab] = useState("Sidebar");
   const [config, setConfig] = useState<ILayout>(DefaultConfig);
@@ -110,6 +111,14 @@ const PublicRoutes = () => {
           element={
             <SuspensedView>
               <JobDetailPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="cv-bank/:id"
+          element={
+            <SuspensedView>
+              <CvPDFPage />
             </SuspensedView>
           }
         />

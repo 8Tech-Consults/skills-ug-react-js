@@ -5,20 +5,23 @@ import { http_get } from "../../services/Api";
 import { toast } from "react-toastify";
 import { ProfileModel } from "../../models/ProfileModel";
 import { BASE_URL } from "../../../Constants";
-import { pageSkeleton } from "../public/JobDetailPage";
+import { pageSkeleton } from "./JobDetailPage";
+import { useParams, Link } from "react-router-dom";
 
-export default function MyCVPage() {
+export default function CvPDFPage() {
   // Use a utility-provided file if available, otherwise fallback to the user's PDF URL.
 
   const [loading, setLoading] = useState<boolean>(true);
   const [pdfSource, setPdfSource] = useState<string>("");
+  const [pro, setProfile] = useState<ProfileModel>(new ProfileModel());
+  const { id } = useParams<{ id: string }>();
 
   const fetchData = async () => {
     setLoading(true);
 
     var response = null;
     try {
-      response = await http_get(`users/me`);
+      response = await http_get(`cvs/${id}`);
       if (response.code !== 1) {
         toast.error(
           response.message || "Failed to fetch cv because : " + response.message
@@ -36,6 +39,7 @@ export default function MyCVPage() {
       toast.error("Failed to fetch cv because : " + response.message);
       return;
     }
+    setProfile(profile);
     //school_pay_account_id
     setPdfSource(BASE_URL + "/storage/" + profile.school_pay_account_id);
   };
@@ -52,6 +56,20 @@ export default function MyCVPage() {
   return (
     <Content>
       <main className="">
+        <ol className="breadcrumb breadcrumb-item text-muted fs-6 fw-bold mb-5 mx-3">
+          <li className="breadcrumb-item pe-3">
+            <Link to="/" className="active text-decoration-none">
+              Home
+            </Link>
+          </li>
+          <li className="breadcrumb-item pe-3 ">
+            <Link to="/cv-bank" className="active text-decoration-none">
+              CVs
+            </Link>
+          </li>
+          <li className="breadcrumb-item px-3 text-muted ">{pro.name}</li>
+        </ol>
+
         <section className="pdf-viewer-container">
           <iframe
             title="My CV PDF Viewer"

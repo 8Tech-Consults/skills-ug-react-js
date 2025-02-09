@@ -43,6 +43,41 @@ export const JobSkeleton = () => (
     </div>
   </div>
 );
+export const pageSkeleton = () => (
+  <div className="container py-4 px-2 px-lg-10">
+    <div className="row mb-4 g-3">
+      <div className="col-12 col-lg-8">
+        <div className="d-flex align-items-start">
+          <Skeleton circle width={80} height={80} className="me-3" />
+          <div style={{ width: "100%" }}>
+            <Skeleton height={32} width="60%" />
+            <Skeleton height={20} width="40%" />
+            <Skeleton height={20} width="30%" />
+            <Skeleton height={20} width="30%" />
+          </div>
+        </div>
+      </div>
+      <div className="col-12 col-lg-4">
+        <Skeleton height={38} width="100%" />
+      </div>
+    </div>
+
+    <div className="row gy-4">
+      <div className="col-12 col-lg-8">
+        <div className="bg-white p-4 rounded shadow-sm mb-4">
+          <Skeleton height={24} width="30%" className="mb-3" />
+          <Skeleton count={20} />
+        </div>
+      </div>
+      <div className="col-12 col-lg-4">
+        <div className="bg-white p-4 rounded shadow-sm">
+          <Skeleton height={24} width="40%" className="mb-3" />
+          <Skeleton count={20} />
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const JobDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

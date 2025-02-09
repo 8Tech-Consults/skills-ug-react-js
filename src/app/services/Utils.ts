@@ -7,6 +7,10 @@ class Utils {
     return JSON.stringify(obj);
   }
 
+  //delay static function that takes seconds
+  static delay = (seconds: number) =>
+    new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+
   // Convert a JSON string to an object
   static fromJson(jsonStr: any, Model: any) {
     const obj = JSON.parse(jsonStr);

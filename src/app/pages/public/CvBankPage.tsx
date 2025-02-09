@@ -504,7 +504,10 @@ const CvBankPage: React.FC<CvBankPageProps> = () => {
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <Link to={`/cv/${selectedCv.id}`} className="btn btn-primary">
+                  <Link
+                    to={`/cv-bank/${selectedCv.id}`}
+                    className="btn btn-primary"
+                  >
                     View Complete Cv
                   </Link>
                   <button
