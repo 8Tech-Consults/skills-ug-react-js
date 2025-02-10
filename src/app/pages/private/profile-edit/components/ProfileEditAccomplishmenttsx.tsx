@@ -349,7 +349,7 @@ const ProfileEditAccomplishment = () => {
                   <Button
                     type="submit"
                     variant="success"
-                    onClick={() => navigate("/admin/dashboard")}
+                    onClick={() => navigate("/admin/my-cv")}
                     disabled={isSubmitting}
                   >
                     Finish

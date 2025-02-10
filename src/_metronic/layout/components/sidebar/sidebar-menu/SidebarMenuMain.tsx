@@ -52,7 +52,7 @@ const SidebarMenuMain = () => {
           title="View my profile"
           hasBullet={true}
         />
-        <SidebarMenuItem
+        {/* <SidebarMenuItem
           to="/admin/profile-edit/accomplishment"
           title="Download my CV"
           hasBullet={true}
@@ -61,7 +61,7 @@ const SidebarMenuMain = () => {
           to="/admin/profile-edit/accomplishment"
           title="Email my CV"
           hasBullet={true}
-        />
+        /> */}
       </SidebarMenuItemWithSub>
 
       <SidebarMenuItemWithSub
