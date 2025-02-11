@@ -2,6 +2,17 @@ import { BASE_URL, DB_LOGGED_IN_PROFILE } from "../../Constants";
 import { ProfileModel } from "../models/ProfileModel";
 
 class Utils {
+  static formatDateTime(interview_scheduled_at: string) {
+    var date = new Date(interview_scheduled_at);
+    return date.toLocaleString();
+  }
+
+  //formatDate
+  static formatDate(date: string) {
+    var d = new Date(date);
+    return d.toLocaleDateString();
+  }
+
   // Convert an object to JSON string
   static toJson(obj: any) {
     return JSON.stringify(obj);

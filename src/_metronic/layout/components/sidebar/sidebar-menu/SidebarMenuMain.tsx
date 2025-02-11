@@ -72,13 +72,13 @@ const SidebarMenuMain = () => {
         fontIcon="bi-app-indicator"
       >
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
+          to="/admin/my-job-applications"
           title="My Job Applications"
           hasBullet={true}
         />
 
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
+          to="/admin/my-job-interviews"
           title="Shortlisted "
           hasBullet={true}
         />

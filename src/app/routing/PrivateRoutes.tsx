@@ -25,6 +25,12 @@ const PrivateRoutes = () => {
   );
 
   const MyCVPage = lazy(() => import("../pages/private/MyCVPage"));
+  const MyJobApplicationsPage = lazy(
+    () => import("../pages/private/MyJobApplicationsPage")
+  );
+  const MyShortListedJobApplicationsPage = lazy(
+    () => import("../pages/private/MyShortListedJobApplicationsPage")
+  );
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
   const WizardsPage = lazy(() => import("../modules/wizards/WizardsPage"));
   const AccountPage = lazy(() => import("../modules/accounts/AccountPage"));
@@ -101,6 +107,22 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <MyCVPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="my-job-applications"
+          element={
+            <SuspensedView>
+              <MyJobApplicationsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="my-job-interviews"
+          element={
+            <SuspensedView>
+              <MyShortListedJobApplicationsPage />
             </SuspensedView>
           }
         />

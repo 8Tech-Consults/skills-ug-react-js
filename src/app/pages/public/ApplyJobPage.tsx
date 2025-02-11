@@ -96,7 +96,7 @@ const ApplyJobPage: React.FC = () => {
       try {
         await http_post("job-apply", submissionData);
         toast.success("Job application submitted successfully");
-        navigate(`/jobs/${id}`);
+        navigate(`/admin/my-job-applications`);
       } catch (error) {
         setSubmitError("Failed: " + error);
         toast.error(error + "");
@@ -345,7 +345,9 @@ const ApplyJobPage: React.FC = () => {
         <div className="modal-dialog modal-lg">
           <div className="modal-content">
             <div className="modal-header bg-primary text-white">
-              <h5 className="modal-title">Confirm Your Application</h5>
+              <h5 className="modal-title text-white">
+                Confirm Your Application
+              </h5>
               <button
                 type="button"
                 className="btn-close"
