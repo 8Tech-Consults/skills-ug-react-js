@@ -1,4 +1,4 @@
-export const BASE_URL = "https://skills-ug-api.8technologsies.net";
+export const BASE_URL = "https://skills-ug-api.8technologies.net";
 // export const BASE_URL = "http://localhost/skills-ug-web";
 export const API_URL = BASE_URL + "/api";
 export const TIMEOUT = 5000;
