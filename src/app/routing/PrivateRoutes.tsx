@@ -16,6 +16,7 @@ import {
 } from "../../_metronic/layout/core";
 import { adminLayoutConfig } from "../../_metronic/layout/core/layoutConfigs";
 import CompanyProfileEditPage from "../pages/private/profile-edit/CompanyProfileEditPage";
+import CompanyPostedJobsPage from "../pages/private/CompanyPostedJobsPage";
 const LAYOUT_CONFIG_KEY =
   import.meta.env.VITE_APP_BASE_LAYOUT_CONFIG_KEY || "LayoutConfig";
 
@@ -30,6 +31,9 @@ const PrivateRoutes = () => {
   );
   const MyShortListedJobApplicationsPage = lazy(
     () => import("../pages/private/MyShortListedJobApplicationsPage")
+  );
+  const CompanyJobApplicationsPage = lazy(
+    () => import("../pages/private/CompanyJobApplicationsPage")
   );
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
   const WizardsPage = lazy(() => import("../modules/wizards/WizardsPage"));
@@ -119,6 +123,22 @@ const PrivateRoutes = () => {
           }
         />
         <Route
+          path="company-jobs"
+          element={
+            <SuspensedView>
+              <CompanyPostedJobsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="company-job-applications"
+          element={
+            <SuspensedView>
+              <CompanyJobApplicationsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
           path="my-job-interviews"
           element={
             <SuspensedView>
@@ -136,6 +156,14 @@ const PrivateRoutes = () => {
         />
         <Route
           path="job-create"
+          element={
+            <SuspensedView>
+              <JobCreatePage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="job-create/:id"
           element={
             <SuspensedView>
               <JobCreatePage />

@@ -105,7 +105,7 @@ const SidebarMenuMain = () => {
       </SidebarMenuItemWithSub>
 
       <SidebarMenuItemWithSub
-        to="/crafted/pages/profile"
+        to="/company/"
         title="Company activities"
         hasBullet={false}
         icon="media/icons/duotune/general/gen019.svg"
@@ -118,13 +118,13 @@ const SidebarMenuMain = () => {
         />
 
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
+          to="/admin/company-jobs"
           title="Posted Jobs"
           hasBullet={true}
         />
 
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
+          to="/admin/company-job-applications"
           title="Job Applications"
           hasBullet={true}
         />

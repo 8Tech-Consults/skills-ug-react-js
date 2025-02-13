@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   TextInput,
@@ -21,10 +21,11 @@ import "react-quill/dist/quill.snow.css";
 
 // For animations:
 import { motion } from "framer-motion";
-import { http_post } from "../../../services/Api";
+import { http_post, http_get } from "../../../services/Api";
 import { JobModel } from "../../../models/JobModel";
+import { Spinner } from "react-bootstrap";
 
-// Dummy data for select fields
+// Dummy data for select fields (Keep these as they are)
 const SUB_COUNTY_OPTIONS = [
   { value: "SC001", label: "Sub County 1" },
   { value: "SC002", label: "Sub County 2" },
@@ -146,47 +147,84 @@ const validationSchema = Yup.object().shape({
 const JobCreatePage: React.FC = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { id } = useParams<{ id?: string }>();
+  const isEditMode = !!id;
   const [showPreferredCountries, setShowPreferredCountries] = useState(false);
   const [showDisabilityDetails, setShowDisabilityDetails] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setCurrentUser } = useAuth();
-
-  // Load job defaults from the model
-  const [job] = useState<JobModel>(() => {
-    return new JobModel();
-  });
+  const [jobLoading, setJobLoading] = useState(false);
+  const [initialJobValues, setInitialJobValues] = useState<JobModel>(
+    () => new JobModel()
+  );
 
   useEffect(() => {
     if (!currentUser) {
       toast.error("Please log in first.");
       navigate("/login");
     }
-  }, [currentUser, navigate]);
+
+    if (isEditMode && id) {
+      fetchJobDetails(id);
+    }
+  }, [currentUser, navigate, isEditMode, id]);
+
+  const fetchJobDetails = async (jobId: string) => {
+    setJobLoading(true);
+    setErrorMessage("");
+    try {
+      const resp = await http_get(`jobs/${jobId}`);
+      const jobData = JobModel.fromJson(JSON.stringify(resp.data));
+      console.log("Fetched job details:", jobData);
+      setInitialJobValues(jobData);
+    } catch (error: any) {
+      console.error("Error fetching job details:", error);
+      toast.error("Failed to load job details for editing.");
+      setErrorMessage(error?.message || "Failed to load job details.");
+    } finally {
+      setJobLoading(false);
+    }
+  };
 
   const handleSubmit = async (values: JobModel, actions: any) => {
     setErrorMessage("");
     setSuccessMessage("");
     setIsLoading(true);
     try {
-      const resp = await http_post("job-create", values);
-      const data = JobModel.fromJson(JSON.stringify(resp));
-      if (Number(data.id) <= 0) {
-        throw new Error("Failed to create job because of invalid ID");
+      let resp;
+      if (isEditMode && id) {
+        resp = await http_post(`jobs/${id}`, values);
+        toast.success("Job updated successfully");
+      } else {
+        resp = await http_post("job-create", values);
+        toast.success("Job created successfully");
       }
 
-      toast.success("Job submitted successfully");
-      navigate("/admin/jobs");
-    } catch (error) {
-      setErrorMessage("Failed: " + error);
-      toast.error("Profile update failed");
+      const data = JobModel.fromJson(JSON.stringify(resp));
+      if (Number(data.id) <= 0) {
+        throw new Error(
+          `Failed to ${
+            isEditMode ? "update" : "create"
+          } job because of invalid ID`
+        );
+      }
+
+      navigate("/admin/company-jobs");
+    } catch (error: any) {
+      setErrorMessage("Failed: " + error?.message || "An error occurred");
+      toast.error(
+        `Job ${isEditMode ? "update" : "creation"} failed: ${
+          error?.message || "An error occurred"
+        }`
+      );
       actions.setSubmitting(false);
     } finally {
       setIsLoading(false);
       actions.setSubmitting(false);
     }
   };
+
   // Framer Motion variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -203,12 +241,12 @@ const JobCreatePage: React.FC = () => {
         breadcrumbs={[
           {
             title: "Jobs",
-            path: "/admin/jobs",
+            path: "/admin/company-jobs",
             isActive: false,
           },
         ]}
       >
-        Create Job
+        {isEditMode ? "Edit Job" : "Create Job"}
       </PageTitle>
       <ToolbarWrapper />
       <Content>
@@ -221,283 +259,315 @@ const JobCreatePage: React.FC = () => {
           exit="exit"
         >
           <div className="card-body">
-            <Formik
-              initialValues={job /* loads default from JobMondel */}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
-            >
-              {({ values, setFieldValue, isSubmitting, errors, touched }) => (
-                <Form className="form w-100">
-                  <h2 className="mb-5">Job Details</h2>
+            {jobLoading && !errorMessage && (
+              <div className="text-center py-5">
+                <Spinner animation="border" variant="primary" role="status">
+                  <span className="visually-hidden">
+                    Loading Job Details...
+                  </span>
+                </Spinner>
+              </div>
+            )}
 
-                  {/* Title, Deadline, Status */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <Field
-                        name="title"
-                        label="Job Title *"
-                        placeholder="e.g., Software Engineer"
-                        component={TextInput}
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <Field
-                        name="deadline"
-                        label="Application Deadline *"
-                        component={TextInput}
-                        type="date"
-                      />
-                    </div>
-                  </div>
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <Field
-                        name="status"
-                        label="Job Status *"
-                        options={JOB_STATUS_OPTIONS}
-                        component={SelectInput}
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <Field
-                        name="job_category_id"
-                        label="Job Category *"
-                        options={JOB_CATEGORY_OPTIONS}
-                        component={SelectInput}
-                      />
-                    </div>
-                  </div>
+            {errorMessage && (
+              <div className="alert alert-danger text-center" role="alert">
+                {errorMessage}
+              </div>
+            )}
 
-                  {/* Employment Status & Workplace */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <Field
-                        name="employment_status"
-                        label="Employment Status *"
-                        options={EMPLOYMENT_STATUS_OPTIONS}
-                        // Radio
-                        component={(props: any) => (
-                          <RadioButton
-                            {...props}
-                            radioClass="form-check form-check-inline"
-                          />
-                        )}
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <Field
-                        name="workplace"
-                        label="Workplace *"
-                        options={WORKPLACE_OPTIONS}
-                        // Radio
-                        component={(props: any) => (
-                          <RadioButton
-                            {...props}
-                            radioClass="form-check form-check-inline"
-                          />
-                        )}
-                      />
-                    </div>
-                  </div>
+            {!jobLoading &&
+              !errorMessage && ( // Modified condition: Render form only when NOT loading AND NO error
+                <Formik
+                  initialValues={initialJobValues}
+                  validationSchema={validationSchema}
+                  onSubmit={handleSubmit}
+                  enableReinitialize
+                >
+                  {({
+                    values,
+                    setFieldValue,
+                    isSubmitting,
+                    errors,
+                    touched,
+                  }) => (
+                    <Form className="form w-100">
+                      <h2 className="mb-5">
+                        {isEditMode ? "Edit Job Details" : "Job Details"}
+                      </h2>
 
-                  {/* Salary Range */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <Field
-                        name="show_salary"
-                        label="Show Salary *"
-                        options={YES_NO_OPTIONS}
-                        component={(props: any) => (
-                          <RadioButton
-                            {...props}
-                            radioClass="form-check form-check-inline"
-                          />
-                        )}
-                      />
-                    </div>
-                    <div className="col-md-3">
-                      <Field
-                        name="minimum_salary"
-                        label="Minimum Salary (UGX)"
-                        placeholder="Min UGX e.g. 50000"
-                        component={TextInput}
-                        type="number"
-                      />
-                    </div>
-                    <div className="col-md-3">
-                      <Field
-                        name="maximum_salary"
-                        label="Maximum Salary (UGX)"
-                        placeholder="Max UGX"
-                        component={TextInput}
-                        type="number"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Sub County, Gender */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <Field
-                        name="sub_county_id"
-                        label="Sub County *"
-                        options={SUB_COUNTY_OPTIONS}
-                        component={SelectInput}
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      {/* field for address */}
-                      <Field
-                        name="address"
-                        label="Address"
-                        placeholder="e.g., Plot 123, Street Name"
-                        component={TextInput} // TextInput
-                      />
-                    </div>
-                  </div>
-
-                  {/* Age Range */}
-                  <div className="row mb-3">
-                    <div className="col-md-6 ">
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
+                      {/* ... (rest of the form fields - same as before) ... */}
+                      {/* Title, Deadline, Status */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
                           <Field
-                            name="min_age"
-                            label="Minimum Age *"
-                            placeholder="e.g 18"
+                            name="title"
+                            label="Job Title *"
+                            placeholder="e.g., Software Engineer"
                             component={TextInput}
-                            type="number"
                           />
                         </div>
                         <div className="col-md-6">
                           <Field
-                            name="max_age"
-                            label="Maximum Age *"
-                            placeholder="65"
+                            name="deadline"
+                            label="Application Deadline *"
+                            component={TextInput}
+                            type="date"
+                          />
+                        </div>
+                      </div>
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <Field
+                            name="status"
+                            label="Job Status *"
+                            options={JOB_STATUS_OPTIONS}
+                            component={SelectInput}
+                          />
+                        </div>
+                        <div className="col-md-6">
+                          <Field
+                            name="job_category_id"
+                            label="Job Category *"
+                            options={JOB_CATEGORY_OPTIONS}
+                            component={SelectInput}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Employment Status & Workplace */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <Field
+                            name="employment_status"
+                            label="Employment Status *"
+                            options={EMPLOYMENT_STATUS_OPTIONS}
+                            // Radio
+                            component={(props: any) => (
+                              <RadioButton
+                                {...props}
+                                radioClass="form-check form-check-inline"
+                              />
+                            )}
+                          />
+                        </div>
+                        <div className="col-md-6">
+                          <Field
+                            name="workplace"
+                            label="Workplace *"
+                            options={WORKPLACE_OPTIONS}
+                            // Radio
+                            component={(props: any) => (
+                              <RadioButton
+                                {...props}
+                                radioClass="form-check form-check-inline"
+                              />
+                            )}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Salary Range */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <Field
+                            name="show_salary"
+                            label="Show Salary *"
+                            options={YES_NO_OPTIONS}
+                            component={(props: any) => (
+                              <RadioButton
+                                {...props}
+                                radioClass="form-check form-check-inline"
+                              />
+                            )}
+                          />
+                        </div>
+                        <div className="col-md-3">
+                          <Field
+                            name="minimum_salary"
+                            label="Minimum Salary (UGX)"
+                            placeholder="Min UGX e.g. 50000"
+                            component={TextInput}
+                            type="number"
+                          />
+                        </div>
+                        <div className="col-md-3">
+                          <Field
+                            name="maximum_salary"
+                            label="Maximum Salary (UGX)"
+                            placeholder="Max UGX"
                             component={TextInput}
                             type="number"
                           />
                         </div>
                       </div>
-                    </div>
-                    <div className="col-md-6">
-                      <Field
-                        name="gender"
-                        label="Preferred Gender *"
-                        options={GENDER_OPTIONS}
-                        // Radio
-                        component={(props: any) => (
-                          <RadioButton
-                            {...props}
-                            radioClass="form-check form-check-inline"
+
+                      {/* Sub County, Gender */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <Field
+                            name="sub_county_id"
+                            label="Sub County *"
+                            options={SUB_COUNTY_OPTIONS}
+                            component={SelectInput}
                           />
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Experience Info */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <Field
-                        name="experience_field"
-                        label="Experience Field *"
-                        placeholder="e.g. IT, Finance"
-                        component={TextInput}
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <Field
-                        name="experience_period"
-                        label="Experience Period (Years) *"
-                        placeholder="e.g. 2"
-                        component={TextInput}
-                        type="number"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Minimum Academic Qualification */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <Field
-                        name="minimum_academic_qualification"
-                        label="Minimum Academic Qualification *"
-                        options={MIN_ACADEMIC_OPTIONS}
-                        component={SelectInput}
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <Field
-                        name="vacancies_count"
-                        label="Vacancies Count *"
-                        component={TextInput}
-                        type="number"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Responsibilities */}
-                  <div className="mb-3">
-                    <label className="form-label fw-bolder text-gray-900">
-                      Responsibilities
-                    </label>
-                    <ReactQuill
-                      theme="snow"
-                      value={values.responsibilities}
-                      onChange={(val) => setFieldValue("responsibilities", val)}
-                      style={{ height: "180px", marginBottom: "40px" }}
-                    />
-                    {errors.responsibilities && touched.responsibilities && (
-                      <div className="text-danger">
-                        {errors.responsibilities}
+                        </div>
+                        <div className="col-md-6">
+                          {/* field for address */}
+                          <Field
+                            name="address"
+                            label="Address"
+                            placeholder="e.g., Plot 123, Street Name"
+                            component={TextInput}
+                          />
+                        </div>
                       </div>
-                    )}
-                  </div>
 
-                  {/* Benefits */}
-                  <br />
-                  <div className="mb-3 mt-0">
-                    <label className="form-label fw-bolder text-gray-900">
-                      Benefits
-                    </label>
-                    <ReactQuill
-                      theme="snow"
-                      value={values.benefits}
-                      onChange={(val) => setFieldValue("benefits", val)}
-                      style={{ height: "180px", marginBottom: "40px" }}
-                    />
-                  </div>
+                      {/* Age Range */}
+                      <div className="row mb-3">
+                        <div className="col-md-6 ">
+                          <div className="row">
+                            <div className="col-md-6 mb-3">
+                              <Field
+                                name="min_age"
+                                label="Minimum Age *"
+                                placeholder="e.g 18"
+                                component={TextInput}
+                                type="number"
+                              />
+                            </div>
+                            <div className="col-md-6">
+                              <Field
+                                name="max_age"
+                                label="Maximum Age *"
+                                placeholder="65"
+                                component={TextInput}
+                                type="number"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <Field
+                            name="gender"
+                            label="Preferred Gender *"
+                            options={GENDER_OPTIONS}
+                            // Radio
+                            component={(props: any) => (
+                              <RadioButton
+                                {...props}
+                                radioClass="form-check form-check-inline"
+                              />
+                            )}
+                          />
+                        </div>
+                      </div>
 
-                  {/* Application Method */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <Field
-                        name="application_method"
-                        label="Application Method *"
-                        options={APPLICATION_METHOD_OPTIONS}
-                        component={SelectInput}
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <Field
-                        name="application_method_details"
-                        label="Application Method Details"
-                        placeholder="e.g., Send CV to hr@example.com"
-                        component={TextInput}
-                      />
-                    </div>
-                  </div>
+                      {/* Experience Info */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <Field
+                            name="experience_field"
+                            label="Experience Field *"
+                            placeholder="e.g. IT, Finance"
+                            component={TextInput}
+                          />
+                        </div>
+                        <div className="col-md-6">
+                          <Field
+                            name="experience_period"
+                            label="Experience Period (Years) *"
+                            placeholder="e.g. 2"
+                            component={TextInput}
+                            type="number"
+                          />
+                        </div>
+                      </div>
 
-                  <div className="d-flex justify-content-end mt-4">
-                    <SubmitButton
-                      label="Create Job"
-                      isSubmitting={isSubmitting}
-                    />
-                  </div>
-                </Form>
+                      {/* Minimum Academic Qualification */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <Field
+                            name="minimum_academic_qualification"
+                            label="Minimum Academic Qualification *"
+                            options={MIN_ACADEMIC_OPTIONS}
+                            component={SelectInput}
+                          />
+                        </div>
+                        <div className="col-md-6">
+                          <Field
+                            name="vacancies_count"
+                            label="Vacancies Count *"
+                            component={TextInput}
+                            type="number"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Responsibilities */}
+                      <div className="mb-3">
+                        <label className="form-label fw-bolder text-gray-900">
+                          Responsibilities
+                        </label>
+                        <ReactQuill
+                          theme="snow"
+                          value={values.responsibilities}
+                          onChange={(val) =>
+                            setFieldValue("responsibilities", val)
+                          }
+                          style={{ height: "180px", marginBottom: "40px" }}
+                        />
+                        {errors.responsibilities &&
+                          touched.responsibilities && (
+                            <div className="text-danger">
+                              {errors.responsibilities}
+                            </div>
+                          )}
+                      </div>
+
+                      {/* Benefits */}
+                      <br />
+                      <div className="mb-3 mt-0">
+                        <label className="form-label fw-bolder text-gray-900">
+                          Benefits
+                        </label>
+                        <ReactQuill
+                          theme="snow"
+                          value={values.benefits}
+                          onChange={(val) => setFieldValue("benefits", val)}
+                          style={{ height: "180px", marginBottom: "40px" }}
+                        />
+                      </div>
+
+                      {/* Application Method */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <Field
+                            name="application_method"
+                            label="Application Method *"
+                            options={APPLICATION_METHOD_OPTIONS}
+                            component={SelectInput}
+                          />
+                        </div>
+                        <div className="col-md-6">
+                          <Field
+                            name="application_method_details"
+                            label="Application Method Details"
+                            placeholder="e.g., Send CV to hr@example.com"
+                            component={TextInput}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="d-flex justify-content-end mt-4">
+                        <SubmitButton
+                          label={isEditMode ? "Update Job" : "Create Job"}
+                          isSubmitting={isSubmitting}
+                        />
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
               )}
-            </Formik>
           </div>
         </motion.div>
       </Content>

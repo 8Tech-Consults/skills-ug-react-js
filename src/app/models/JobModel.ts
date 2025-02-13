@@ -143,6 +143,41 @@ export class JobModel {
     }
   }
 
+  static async fetchCompanyJobs(
+    page = 1,
+    params: Record<string, string | number> = {}
+  ): Promise<PaginatedResponse<JobModel>> {
+    try {
+      const queryParams = new URLSearchParams({
+        page: String(page),
+        ...Object.fromEntries(
+          Object.entries(params).map(([key, val]) => [key, String(val)])
+        ),
+      });
+
+      // Example: GET /jobs?page=1&search=Engineer
+      const response = await http_get(
+        `/company-jobs?${queryParams.toString()}`
+      );
+      // Your ApiResponser returns { code, message, data }
+      if (response.code !== 1) {
+        throw new Error(response.message || "Failed to fetch jobs.");
+      }
+
+      const paginatedData: PaginatedResponse<any> = response.data;
+
+      // Convert each item in data[] to JobModel
+      paginatedData.data = paginatedData.data.map((item: any) =>
+        JobModel.fromJson(item)
+      );
+
+      return paginatedData as PaginatedResponse<JobModel>;
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+      throw error;
+    }
+  }
+
   /**
    * Fetch the currently authenticated user's jobs (my-jobs).
    * Supports pagination and optional filtering.
