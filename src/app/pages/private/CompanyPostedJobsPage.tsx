@@ -296,13 +296,7 @@ const CompanyPostedJobsPage: React.FC<CompanyPostedJobsPageProps> = () => {
       >
         Manage Posted Jobs
       </PageTitle>
-      <ToolbarWrapper>
-        <Link to="/admin/job-create" className="btn btn-primary">
-          {" "}
-          {/* Link to create page, adjust route if needed */}
-          Create New Job
-        </Link>
-      </ToolbarWrapper>
+      <ToolbarWrapper />
       <Content>
         <motion.div
           className="container-fluid py-4 card shadow-sm"

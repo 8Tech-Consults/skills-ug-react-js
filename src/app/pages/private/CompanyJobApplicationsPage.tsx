@@ -349,11 +349,6 @@ const JobApplicationReviewModal: React.FC<{
   ) => {
     const { name, value } = e.target;
     if (!localApp) return;
-
-    setLocalApp({
-      ...localApp,
-      [name]: value,
-    });
   };
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -21,6 +21,7 @@ export interface PaginatedResponse<T> {
 
 export class JobModel {
   id: string = "";
+  created_at: string = "";
   title: string = "";
   posted_by_id: string = "";
   status: string = "Pending";
