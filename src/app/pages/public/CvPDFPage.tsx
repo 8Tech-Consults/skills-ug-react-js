@@ -1,53 +1,70 @@
 import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { http_get, http_post } from "../../services/Api";
 import Utils from "../../services/Utils";
 import { Content } from "../../../_metronic/layout/components/content";
-import { http_get } from "../../services/Api";
-import { toast } from "react-toastify";
+import { PageTitle } from "../../../_metronic/layout/core";
+import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { ProfileModel } from "../../models/ProfileModel";
 import { BASE_URL } from "../../../Constants";
 import { pageSkeleton } from "./JobDetailPage";
-import { useParams, Link } from "react-router-dom";
 
 export default function CvPDFPage() {
-  // Use a utility-provided file if available, otherwise fallback to the user's PDF URL.
-
+  const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const [pdfSource, setPdfSource] = useState<string>("");
-  const [pro, setProfile] = useState<ProfileModel>(new ProfileModel());
-  const { id } = useParams<{ id: string }>();
+  const [profile, setProfile] = useState<ProfileModel>(new ProfileModel());
 
+  // Fetch CV and then auto-submit a view record
   const fetchData = async () => {
     setLoading(true);
-
-    var response = null;
     try {
-      response = await http_get(`cvs/${id}`);
+      const response = await http_get(`cvs/${id}`);
       if (response.code !== 1) {
-        toast.error(
-          response.message || "Failed to fetch cv because : " + response.message
-        );
+        toast.error(response.message || "Failed to fetch CV");
+        setLoading(false);
+        return;
       }
-    } catch (error) {
+      const fetchedProfile = ProfileModel.fromJson(JSON.stringify(response.data));
+      if (!fetchedProfile.id) {
+        toast.error("Failed to fetch CV");
+        setLoading(false);
+        return;
+      }
+      setProfile(fetchedProfile);
+      setPdfSource(BASE_URL + "/storage/" + fetchedProfile.school_pay_account_id);
+
+      // Automatically record the view of the CV
+      await submitViewRecord();
+    } catch (error: any) {
+      console.error("Error fetching CV:", error);
+      toast.error("Failed to fetch CV: " + error.message);
+    } finally {
       setLoading(false);
-      toast.error("Failed to fetch cv because : " + error);
-      console.error("Error fetching job by ID:", error);
-      throw error;
     }
-    setLoading(false);
-    var profile = ProfileModel.fromJson(JSON.stringify(response.data));
-    if (profile.id == "") {
-      toast.error("Failed to fetch cv because : " + response.message);
-      return;
+  };
+
+  // Automatically submit a view record of type "CV"
+  const submitViewRecord = async () => {
+    try {
+      const payload = { type: "CV", item_id: id };
+      const response = await http_post("/view-record-create", payload);
+      if (response.code === 1) {
+        toast.success("View recorded successfully.");
+      } else { 
+      }
+    } catch (error: any) {
+/*       console.error("Error recording view:", error);
+      toast.error("Failed to record view: " + error.message); */
     }
-    setProfile(profile);
-    //school_pay_account_id
-    setPdfSource(BASE_URL + "/storage/" + profile.school_pay_account_id);
   };
 
   useEffect(() => {
     document.title = "My CV";
     fetchData();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   if (loading) {
     return pageSkeleton();
@@ -55,8 +72,7 @@ export default function CvPDFPage() {
 
   return (
     <Content>
-      <main className="">
-        <ol className="breadcrumb breadcrumb-item text-muted fs-6 fw-bold mb-5 mx-3">
+      <ol className="breadcrumb breadcrumb-item text-muted fs-6 fw-bold mb-5 mx-3">
           <li className="breadcrumb-item pe-3">
             <Link to="/" className="active text-decoration-none">
               Home
@@ -67,68 +83,58 @@ export default function CvPDFPage() {
               CVs
             </Link>
           </li>
-          <li className="breadcrumb-item px-3 text-muted ">{pro.name}</li>
+          <li className="breadcrumb-item px-3 text-muted ">{profile.name}</li>
         </ol>
-
-        <section className="pdf-viewer-container">
-          <iframe
-            title="My CV PDF Viewer"
-            src={pdfSource}
-            className="pdf-iframe"
-            allowFullScreen
-            aria-label="PDF viewer"
-          />
-        </section>
-
-        <style>{`
-        .pdf-page-container {
+      <div className="  shadow-sm my-4">
+      
+        <ToolbarWrapper />
+        <div className="card-body">
+          <section className="pdf-viewer-container mb-4">
+            <iframe
+              title="My CV PDF Viewer"
+              src={pdfSource}
+              className="pdf-iframe"
+              allowFullScreen
+              aria-label="PDF viewer"
+            />
+          </section>
+          <div className="pdf-footer text-center">
+            <Link to="/cv-bank" className="btn btn-outline-primary">
+              Back to CV Bank
+            </Link>
+          </div>
+        </div>
+      </div>
+      <style>{`
+        .cv-page-container {
           max-width: 900px;
-          margin: 20px auto;
-          padding: 20px;
-          background-color: #f9f9f9;
+          margin: auto;
+          background-color: #fff;
           border-radius: 8px;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-        header h2 {
-          text-align: center;
-          margin-bottom: 1rem;
-          color: #333;
+          overflow: hidden;
         }
         .pdf-viewer-container {
           border: 1px solid #ddd;
           border-radius: 5px;
           overflow: hidden;
-          background-color: #fff;
+          background-color: #fdfdfd;
           height: 95vh;
         }
         .pdf-iframe {
           width: 100%;
           height: 100%;
           border: none;
-          display: block;
         }
         .pdf-footer {
-          text-align: center;
-          margin-top: 15px;
-        }
-        .pdf-footer a {
-          color: #0078d7;
-          text-decoration: none;
-          font-weight: bold;
-        }
-        .pdf-footer a:hover {
-          text-decoration: underline;
+          padding: 1rem;
         }
         @media print {
-          .pdf-page-container {
+          .cv-page-container {
             margin: 0;
-            padding: 0;
             box-shadow: none;
           }
         }
       `}</style>
-      </main>
     </Content>
   );
 }

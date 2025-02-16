@@ -83,23 +83,18 @@ const SidebarMenuMain = () => {
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
-          title="Job Offers"
+          to="/admin/my-job-offers"
+          title="My Job Offers"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
+          to="/admin/my-company-follows"
           title="Followed Companies"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
+          to="/admin/my-cv-views"
           title="My CV views"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/profile-edit/photo"
-          title="My Emailed CVs"
           hasBullet={true}
         />
       </SidebarMenuItemWithSub>
@@ -131,40 +126,26 @@ const SidebarMenuMain = () => {
 
         <SidebarMenuItem
           to="/admin/company-profile-edit"
-          title="Create/Update Company Profile"
+          title="Company Profile"
           hasBullet={true}
         />
 
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
-          title="Job Applications"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/profile-edit/photo"
-          title="Shortlisted Candidates"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/profile-edit/photo"
+          to="/admin/company-job-offers"
           title="Job Offers"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
-          title="Followed Candidates"
+          to="/admin/company-followers"
+          title="Company Followers"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/admin/profile-edit/photo"
+          to="/admin/company-profile-views"
           title="Company Profile Views"
           hasBullet={true}
         />
-        <SidebarMenuItem
-          to="/admin/profile-edit/photo"
-          title="Emailed CVs"
-          hasBullet={true}
-        />
+       
       </SidebarMenuItemWithSub>
 
       <SidebarMenuItemWithSub

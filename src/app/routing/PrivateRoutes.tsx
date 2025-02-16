@@ -26,6 +26,16 @@ const PrivateRoutes = () => {
   );
 
   const MyCVPage = lazy(() => import("../pages/private/MyCVPage"));
+  const CompanyProfileViewsPage = lazy(
+    () => import("../pages/private/CompanyProfileViewsPage")
+  );
+  const MyCompanyFollowsPage = lazy(
+    () => import("../pages/private/MyCompanyFollowsPage")
+  );
+  const MyCvViewsPage = lazy(() => import("../pages/private/MyCvViewsPage"));
+  const CompanyFollowersPage = lazy(
+    () => import("../pages/private/CompanyFollowersPage")
+  );
   const MyJobApplicationsPage = lazy(
     () => import("../pages/private/MyJobApplicationsPage")
   );
@@ -34,6 +44,12 @@ const PrivateRoutes = () => {
   );
   const CompanyJobApplicationsPage = lazy(
     () => import("../pages/private/CompanyJobApplicationsPage")
+  );
+  const MyJobOffersPage = lazy(
+    () => import("../pages/private/MyJobOffersPage")
+  );
+  const CompanyJobOffersPage = lazy(
+    () => import("../pages/private/CompanyJobOffersPage")
   );
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
   const WizardsPage = lazy(() => import("../modules/wizards/WizardsPage"));
@@ -123,6 +139,22 @@ const PrivateRoutes = () => {
           }
         />
         <Route
+          path="my-job-offers"
+          element={
+            <SuspensedView>
+              <MyJobOffersPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="company-job-offers"
+          element={
+            <SuspensedView>
+              <CompanyJobOffersPage />
+            </SuspensedView>
+          }
+        />
+        <Route
           path="company-jobs"
           element={
             <SuspensedView>
@@ -143,6 +175,38 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <MyShortListedJobApplicationsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="my-company-follows"
+          element={
+            <SuspensedView>
+              <MyCompanyFollowsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="my-cv-views"
+          element={
+            <SuspensedView>
+              <MyCvViewsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="company-profile-views"
+          element={
+            <SuspensedView>
+              <CompanyProfileViewsPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="company-followers"
+          element={
+            <SuspensedView>
+              <CompanyFollowersPage />
             </SuspensedView>
           }
         />
