@@ -1,0 +1,14 @@
+import{r as t,_ as N,L as P,j as e,ah as C,ae as S,ad as V,C as _,aj as A,ak as g,al as E,am as o}from"./index-C-18IsR7.js";import{V as k}from"./ViewRecord -BUx9Jr9n.js";const L={hidden:{opacity:0,y:10},visible:{opacity:1,y:0,transition:{duration:.3}},exit:{opacity:0,y:10}},T=()=>{const[l,u]=t.useState([]),[i,p]=t.useState(!1),[n,j]=t.useState(""),[s,y]=t.useState(1),[d,v]=t.useState(1),f=t.useCallback(async a=>{p(!0),j("");try{const r={type:"COMPANY"},b=new URLSearchParams({page:String(a),...Object.fromEntries(Object.entries(r).map(([x,w])=>[x,String(w)]))}),m=await N(`/company-view-records?${b.toString()}`);if(m.code!==1)throw new Error(m.message||"Failed to fetch company profile views.");const c=m.data;c.data=c.data.map(x=>k.fromJson(x)),u(c.data),y(c.current_page),v(c.last_page)}catch(r){console.error("Error fetching view records:",r),j(r.message||"Failed to load view records."),P.error(r.message||"Failed to load view records.")}finally{p(!1)}},[]);t.useEffect(()=>{f(s)},[f,s]);const h=a=>{a>=1&&a<=d&&y(a)};return e.jsxs(e.Fragment,{children:[e.jsx(C,{breadcrumbs:[{title:"Company Profile Views",path:"/company-profile-views",isActive:!0}],children:"Company Profile Views"}),e.jsxs(S,{children:[e.jsx(V,{}),e.jsx(_.div,{className:"card container-fluid py-4 card shadow-sm my-4",variants:L,initial:"hidden",animate:"visible",exit:"exit",children:e.jsxs("div",{className:"card-body",children:[i&&e.jsx("div",{className:"text-center py-5",children:e.jsx(A,{animation:"border",variant:"primary"})}),!i&&n&&e.jsx(g,{variant:"danger",className:"text-center",children:n}),!i&&!n&&l.length===0&&e.jsx(g,{variant:"info",className:"text-center",children:"No profile views recorded yet."}),!i&&!n&&l.length>0&&e.jsx("div",{className:"table-responsive",children:e.jsxs(E,{striped:!0,hover:!0,className:"align-middle",children:[e.jsx("thead",{className:"table-light",children:e.jsxs("tr",{children:[e.jsx("th",{style:{width:"50px"},children:"#"}),e.jsx("th",{children:"Viewer"}),e.jsx("th",{children:"Viewed On"})]})}),e.jsx("tbody",{children:l.map((a,r)=>e.jsxs("tr",{children:[e.jsx("td",{children:(s-1)*10+(r+1)}),e.jsx("td",{children:a.viewer_text||a.viewer_id||"N/A"}),e.jsx("td",{children:a.created_at?a.created_at.split("T")[0]:"N/A"})]},a.id))})]})}),!i&&!n&&d>1&&e.jsxs(o,{className:"mt-4 justify-content-center",children:[e.jsx(o.Prev,{onClick:()=>h(s-1),disabled:s===1,children:"Previous"}),Array.from({length:d},(a,r)=>r+1).map(a=>e.jsx(o.Item,{active:a===s,onClick:()=>h(a),children:a},a)),e.jsx(o.Next,{onClick:()=>h(s+1),disabled:s===d,children:"Next"})]})]})}),e.jsx("style",{children:`
+        .card {
+          border-radius: 8px;
+        }
+        .card-header {
+          font-family: Arial, sans-serif;
+        }
+        @media print {
+          .card {
+            box-shadow: none;
+            border: none;
+          }
+        }
+      `})]})]})};export{T as default};
