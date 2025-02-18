@@ -110,7 +110,7 @@ const JobListingPage: React.FC = () => {
     if (_districts != null) {
       setDistricts(_districts);
     } else {
-      // toast.error("Failed to fetch districts.");
+      toast.error("Failed to fetch districts.");
     }
     //districts
 
