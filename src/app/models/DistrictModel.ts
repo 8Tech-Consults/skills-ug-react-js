@@ -22,9 +22,7 @@ export class DistrictModel {
     try {
       await this.getOnline();
       localData = await this.getLocal();
-      if (!localData || localData.length === 0) {
-        throw new Error("Failed to fetch districts.");
-      }
+     
       return localData;
     } catch (error) {
       alert("Failed to load districts: " + error);
