@@ -24,6 +24,7 @@ import { motion } from "framer-motion";
 import { http_post, http_get } from "../../../services/Api";
 import { JobModel } from "../../../models/JobModel";
 import { Spinner } from "react-bootstrap";
+import { EMPLOYMENT_STATUS_OPTIONS } from "../../../../Constants";
 
 // Dummy data for select fields (Keep these as they are)
 const SUB_COUNTY_OPTIONS = [
@@ -56,12 +57,6 @@ const JOB_STATUS_OPTIONS = [
   { value: "pending", label: "Pending" },
 ];
 
-const EMPLOYMENT_STATUS_OPTIONS = [
-  { value: "Full Time", label: "Full Time" },
-  { value: "Part Time", label: "Part Time" },
-  { value: "Contract", label: "Contract" },
-  { value: "Internship", label: "Internship" },
-];
 
 const WORKPLACE_OPTIONS = [
   { value: "Onsite", label: "Onsite" },

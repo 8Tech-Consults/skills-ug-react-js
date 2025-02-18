@@ -3,12 +3,27 @@ import { MenuItem } from "./MenuItem";
 import { MenuInnerWithSub } from "./MenuInnerWithSub";
 import { MegaMenu } from "./MegaMenu";
 import { MegaMenuELearning } from "./MegaMenuELearning";
+import { Link } from "react-router-dom";
+import clsx from "clsx";
 
 export function MenuInner() {
+  // get url segments and check if it contain word 'admin'
+  const urlSegments = window.location.pathname.split("/");
+  var isAdmin = urlSegments.includes("admin");
+  if (isAdmin) return null;
   const intl = useIntl();
   return (
     <>
-      <MenuItem title="Home" to="/" />
+      <div className="menu-item me-lg-1 m-0 p-0">
+        <Link className={clsx("menu-link p-0")} to={"/"}>
+          <img
+            src="/media/logos/loader.svg"
+            alt="Skills.ug logo"
+            title="Home Page"
+            style={{ width: "180px", height: "100px" }}
+          />
+        </Link>
+      </div>
       <MenuItem title="Jobs" to="/jobs" />
       <MenuItem title="Employers" to="/employers" />
       <MenuItem title="CV-Bank" to="/cv-bank" />

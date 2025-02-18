@@ -1,5 +1,5 @@
-export const BASE_URL = "https://skills-ug-api.8technologies.net"; 
-// export const BASE_URL = "http://localhost/skills-ug-web";
+export const BASE_URL = "https://skills-ug-api.8technologies.net";
+// export const BASE_URL = "http://localhost/skills-ug-web"; 
 export const API_URL = BASE_URL + "/api";
 export const TIMEOUT = 5000;
 export const MAX_RETRIES = 3;
@@ -7,8 +7,16 @@ export const DATE_FORMAT = "YYYY-MM-DD";
 export const CURRENCY = "USD";
 export const LOCAL_MANIFEST = "LOCAL_MANIFEST";
 export const LOCAL_DISTRICTS = "LOCAL_DISTRICTS";
+export const LOCAL_JOBSEEKER_MANIFEST = "LOCAL_JOBSEEKER_MANIFEST";
 export const LOGO =
   "https://skills-ug-api.8technologies.net/storage/images/8tech.png";
+
+export const EMPLOYMENT_STATUS_OPTIONS = [
+  { value: "Full Time", label: "Full Time" },
+  { value: "Part Time", label: "Part Time" },
+  { value: "Contract", label: "Contract" },
+  { value: "Internship", label: "Internship" },
+];
 
 export const DB_TOKEN = "DB_TOKEN";
 export const DB_LOGGED_IN_PROFILE = "DB_LOGGED_IN_PROFILE";

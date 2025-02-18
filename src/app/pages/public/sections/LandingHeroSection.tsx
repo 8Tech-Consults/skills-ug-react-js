@@ -16,19 +16,17 @@ const fadeVariant = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
 
-const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
-  manifest,
-}) => {
-  // Safely fallback if manifest is null
+const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({ manifest }) => {
+  // Fallback if manifest is null
   const currentManifest = manifest || new ManifestModel();
 
-  // Convert manifest stats into a display-friendly array
+  // Stats data for display
   const statsData = [
     {
       label: "Live Positions",
       value: currentManifest.LIVE_JOBS || "0",
       icon: "bi-briefcase",
-      delta: "+12.3%", // Hardcoded or from backend if needed
+      delta: "+12.3%",
     },
     {
       label: "Vacancies",
@@ -50,19 +48,18 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
     },
   ];
 
-  // Quick links from categories or top jobs
-  // Example: If currentManifest.CATEGORIES is an array of objects: {id, name, ...}
+  // Quick links (categories) – these will now pass the category filter to the jobs page
   const quickLinks = Array.isArray(currentManifest.CATEGORIES)
     ? currentManifest.CATEGORIES.slice(0, 6).map((cat: any) => ({
         label: cat.name || "Unknown Category",
-        count: cat.jobs_count ?? 0, // if your JobCategory model has 'jobs_count'
+        id: cat.id,
+        count: cat.jobs_count ?? 0,
         isHot: false,
         isNew: false,
       }))
     : [];
 
-  // We'll also use TOP_CITIES from the manifest to show top 6 or 8 city links
-  // Example shape: { id, name, jobs_count, photo }
+  // Top cities for the location selector
   const topCities = Array.isArray(currentManifest.TOP_CITIES)
     ? currentManifest.TOP_CITIES.slice(0, 8).map((city: any) => ({
         name: city.name || "Unknown City",
@@ -79,9 +76,8 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
       animate="visible"
       variants={fadeVariant}
       style={{
-        // Blurred background image with overlay
         background: `
-          linear-gradient(45deg, rgba(7, 22, 46, 0.95) 0%, rgba(14, 35, 69, 0.9) 100%),
+          linear-gradient(45deg, rgba(17,71,134,0.95) 0%, rgba(243,61,2,0.9) 100%),
           url(${toAbsoluteUrl("media/stock/1920x1080/img-1.jpg")})
         `,
         backgroundSize: "cover",
@@ -91,19 +87,17 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
         WebkitBackdropFilter: "blur(5px)",
       }}
     >
-      {/* Subtle pattern overlay (optional) */}
+      {/* Subtle pattern overlay */}
       <div className="position-absolute top-0 start-0 w-100 h-100 opacity-10 bg-pattern-dots" />
 
       <div className="container position-relative z-index-2 py-10 py-lg-12 px-10">
         <div className="row g-8 align-items-center">
           {/* LEFT CONTENT */}
           <div className="col-lg-7">
-            {/* Headline & Tagline */}
             <motion.div variants={fadeVariant}>
               <div className="mb-8 text-center text-lg-start">
                 <h1 className="display-2 text-white mb-4 fw-800">
-                  Find Your Next <span className="text-warning">Career</span>{" "}
-                  Move
+                  Find Your Next <span className="text-accent">Career</span> Move
                 </h1>
                 <p className="lead text-white text-opacity-75 mb-6">
                   Discover top jobs from leading companies in Uganda and beyond!
@@ -111,55 +105,61 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
               </div>
             </motion.div>
 
-            {/* SEARCH FORM */}
+            {/* SEARCH FORM – submits via GET to the /jobs route */}
             <motion.div variants={fadeVariant}>
-              <div className="card bg-white bg-opacity-10 border border-white border-opacity-10 shadow-lg">
-                <div className="card-body p-2">
-                  <div className="row g-3 align-items-center">
-                    {/* Keyword Search */}
-                    <div className="col-md-5">
-                      <div className="input-group">
-                        <span className="input-group-text bg-transparent border-0 pe-1">
-                          <i className="bi bi-search fs-4 text-white text-opacity-50"></i>
-                        </span>
-                        <input
-                          type="text"
-                          className="form-control form-control-lg border-0 bg-transparent text-white placeholder-white-50"
-                          placeholder="Job title, skills..."
-                          style={{ minWidth: "180px" }}
-                        />
+              <form method="get" action="/jobs">
+                <div className="card bg-white bg-opacity-10 border border-white border-opacity-10 shadow-lg">
+                  <div className="card-body p-2">
+                    <div className="row g-3 align-items-center">
+                      {/* Keyword Search */}
+                      <div className="col-md-5">
+                        <div className="input-group">
+                          <span className="input-group-text bg-transparent border-0 pe-1">
+                            <i className="bi bi-search fs-4 text-white text-opacity-50"></i>
+                          </span>
+                          <input
+                            type="text"
+                            name="search"
+                            className="form-control form-control-lg border-0 bg-transparent text-white placeholder-white-50"
+                            placeholder="Job title, skills..."
+                            style={{ minWidth: "180px" }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    {/* Location Selector */}
-                    <div className="col-md-4">
-                      <div className="input-group">
-                        <span className="input-group-text bg-transparent border-0 pe-1">
-                          <i className="bi bi-geo-alt fs-4 text-white text-opacity-50"></i>
-                        </span>
-                        <select className="form-select form-select-lg border-0 bg-transparent text-white">
-                          <option className="text-dark">Any Location</option>
-                          {topCities.map((city) => (
-                            <option
-                              key={city.id || city.name}
-                              value={city.name}
-                              className="text-dark"
-                            >
-                              {city.name} ({city.count})
-                            </option>
-                          ))}
-                        </select>
+                      {/* Location Selector */}
+                      <div className="col-md-4">
+                        <div className="input-group">
+                          <span className="input-group-text bg-transparent border-0 pe-1">
+                            <i className="bi bi-geo-alt fs-4 text-white text-opacity-50"></i>
+                          </span>
+                          <select
+                            name="district"
+                            className="form-select form-select-lg border-0 bg-transparent text-white"
+                          >
+                            <option value="">Any Location</option>
+                            {topCities.map((city) => (
+                              <option
+                                key={city.id || city.name}
+                                value={city.id}
+                                className="text-dark"
+                              >
+                                {city.name} ({city.count})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
-                    </div>
-                    {/* Search Button */}
-                    <div className="col-md-3">
-                      <button className="btn btn-primary btn-lg w-100 fw-bold hover-lift">
-                        Search Jobs
-                        <i className="bi bi-arrow-right-short ms-2"></i>
-                      </button>
+                      {/* Search Button */}
+                      <div className="col-md-3">
+                        <button type="submit" className="btn btn-accent btn-lg w-100 fw-bold hover-lift">
+                          Search Jobs
+                          <i className="bi bi-arrow-right-short ms-2"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </motion.div>
 
             {/* STATS GRID */}
@@ -170,11 +170,7 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
               }}
             >
               {statsData.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  className="col-6 col-md-3"
-                  variants={fadeVariant}
-                >
+                <motion.div key={index} className="col-6 col-md-3" variants={fadeVariant}>
                   <div className="card bg-white bg-opacity-5 hover-scale border border-white border-opacity-10">
                     <div className="card-body">
                       <div className="d-flex align-items-center">
@@ -186,16 +182,10 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
                         </div>
                         {/* Text */}
                         <div className="flex-grow-1 ms-3">
-                          <div className="text-white text-opacity-75 fs-7 mb-1">
-                            {stat.label}
-                          </div>
+                          <div className="text-white text-opacity-75 fs-7 mb-1">{stat.label}</div>
                           <div className="d-flex align-items-center">
-                            <div className="text-white fs-4 fw-bold me-2">
-                              {stat.value}
-                            </div>
-                            <span className="badge bg-success bg-opacity-10 text-success fs-8">
-                              {stat.delta}
-                            </span>
+                            <div className="text-white fs-4 fw-bold me-2">{stat.value}</div>
+                            <span className="badge bg-success bg-opacity-10 text-success fs-8">{stat.delta}</span>
                           </div>
                         </div>
                       </div>
@@ -228,38 +218,29 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
                       transition={{ delay: index * 0.05 }}
                     >
                       <Link
-                        to={`/jobs?filter=${encodeURIComponent(link.label)}`}
+                        to={`/jobs?category=${encodeURIComponent(link.id)}`}
                         className="d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none hover-scale bg-white bg-opacity-03"
                       >
                         <div className="d-flex align-items-center">
-                          <span className="text-dark fw-medium">
-                            {link.label}
-                          </span>
+                          <span className="text-dark fw-medium">{link.label}</span>
                           {link.isHot && (
-                            <span className="badge bg-danger bg-opacity-25 text-danger ms-3">
-                              Hot
-                            </span>
+                            <span className="badge bg-danger bg-opacity-25 text-danger ms-3">Hot</span>
                           )}
                           {link.isNew && (
-                            <span className="badge bg-success bg-opacity-25 text-success ms-2">
-                              New
-                            </span>
+                            <span className="badge bg-success bg-opacity-25 text-success ms-2">New</span>
                           )}
                         </div>
-                        <span className="badge bg-primary text-white fs-7 fw-bold">
-                          {link.count}
-                        </span>
+                        <span className="badge bg-primary text-white fs-7 fw-bold">{link.count}</span>
                       </Link>
                     </motion.div>
                   ))}
                 </div>
-                {/* Faded gradient at the bottom of card to hint at scrolling */}
+                {/* Faded gradient overlay to hint at scrolling */}
                 <div
                   className="position-absolute bottom-0 start-0 w-100"
                   style={{
                     height: "40px",
-                    background:
-                      "linear-gradient(to top, rgba(10,25,49,1) 0%, rgba(10,25,49,0) 100%)",
+                    background: "linear-gradient(to top, rgba(17,71,134,1) 0%, rgba(17,71,134,0) 100%)",
                   }}
                 ></div>
               </div>
@@ -268,19 +249,11 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
         </div>
       </div>
 
-      {/* Trusted Brands (Optional) */}
+      {/* Trusted Brands Section (Optional) */}
       <div className="container position-relative z-index-2 py-6">
-        <div className="text-center text-white-50 mb-4 fs-6">
-          Trusted by leading organizations
-        </div>
+        <div className="text-center text-white-50 mb-4 fs-6">Trusted by leading organizations</div>
         <div className="d-flex flex-wrap justify-content-center gap-6 bg-light rounded-3 p-4">
-          {[
-            "8tech.png",
-            "ucc.png",
-            "nkumba.svg",
-            "makerere.png",
-            "nita.png",
-          ].map((logo, i) => (
+          {["8tech.png", "ucc.png", "nkumba.svg", "makerere.png", "nita.png"].map((logo, i) => (
             <motion.img
               key={i}
               src={BASE_URL + "/public/assets/img/" + logo}
@@ -292,6 +265,22 @@ const LandingHeroSection: React.FC<LandingHeroSectionProps> = ({
           ))}
         </div>
       </div>
+
+      <style>{`
+        /* Branding based on primary and accent colours */
+        .text-accent {
+          color: #f33d02 !important;
+        }
+        .btn-accent {
+          background-color: #f33d02;
+          border-color: #f33d02;
+          color: #fff;
+        }
+        .btn-accent:hover {
+          background-color: #e03300;
+          border-color: #e03300;
+        }
+      `}</style>
     </motion.div>
   );
 };

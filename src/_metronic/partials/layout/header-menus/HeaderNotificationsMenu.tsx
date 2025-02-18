@@ -12,7 +12,7 @@ import {
 
 const HeaderNotificationsMenu: FC = () => (
   <div
-    className='menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px'
+    className='menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px bg-d'
     data-kt-menu='true'
   >
     <div

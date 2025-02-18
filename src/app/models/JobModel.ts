@@ -1,7 +1,7 @@
 // src/models/JobModel.ts
 
 import { http_get, http_post } from "../services/Api";
-import Utils from "../services/Utils"; // Adjust import if needed
+import Utils from "../services/Utils";
 
 export interface PaginatedResponse<T> {
   current_page: number;
@@ -78,8 +78,6 @@ export class JobModel {
    */
   static fromJson(data: string | Record<string, any>): JobModel {
     const model = new JobModel();
-
-    // If data is a JSON string, parse it
     let obj = typeof data === "string" ? {} : data;
     if (typeof data === "string") {
       try {
@@ -88,8 +86,6 @@ export class JobModel {
         return model; // Return default if parsing fails
       }
     }
-
-    // Merge values
     const modelKeys = Object.keys(model);
     for (const key of Object.keys(obj)) {
       if (modelKeys.includes(key)) {
@@ -99,16 +95,26 @@ export class JobModel {
     return model;
   }
 
-  /**
-   * ------------------------------
-   *   STATIC HTTP HELPER METHODS
-   * ------------------------------
-   */
+  // Helper: Returns a formatted salary range if salary should be shown.
+  getFormattedSalary(): string {
+    if (this.show_salary.toLowerCase() === "yes") {
+      return `UGX ${new Intl.NumberFormat().format(this.minimum_salary)} – ${new Intl.NumberFormat().format(this.maximum_salary)}`;
+    }
+    return "Hidden";
+  }
+
+  // Helper: Returns a combined location string (district and sub-county).
+  getLocation(): string {
+    let location = "";
+    if (this.district_id) location += this.district_id;
+    if (this.sub_county_id) location += ", " + this.sub_county_id;
+    return location || "N/A";
+  }
 
   /**
    * Fetch paginated jobs from Laravel's 'jobs' endpoint.
    * @param page The page number to request.
-   * @param params Additional query params for filtering or search, e.g. { search: 'Engineer' }
+   * @param params Additional query params for filtering or search.
    * @returns A PaginatedResponse of JobModel
    */
   static async fetchJobs(
@@ -118,30 +124,52 @@ export class JobModel {
     try {
       const queryParams = new URLSearchParams({
         page: String(page),
-        ...Object.fromEntries(
-          Object.entries(params).map(([key, val]) => [key, String(val)])
-        ),
+        ...Object.fromEntries(Object.entries(params).map(([key, val]) => [key, String(val)])),
       });
 
-      // Example: GET /jobs?page=1&search=Engineer
       const response = await http_get(`/jobs?${queryParams.toString()}`);
-      // Your ApiResponser returns { code, message, data }
       if (response.code !== 1) {
         throw new Error(response.message || "Failed to fetch jobs.");
       }
 
       const paginatedData: PaginatedResponse<any> = response.data;
-
-      // Convert each item in data[] to JobModel
-      paginatedData.data = paginatedData.data.map((item: any) =>
-        JobModel.fromJson(item)
-      );
-
+      paginatedData.data = paginatedData.data.map((item: any) => JobModel.fromJson(item));
       return paginatedData as PaginatedResponse<JobModel>;
     } catch (error) {
       console.error("Error fetching jobs:", error);
       throw error;
     }
+  }
+
+  /**
+   * Fetch jobs with an extended filter object. Supports all the standard filters plus:
+   * - employment_status
+   * - workplace
+   * - gender
+   * - experience_field
+   * @param page The page number.
+   * @param filters Extended filter object.
+   * @returns A PaginatedResponse of JobModel.
+   */
+  static async fetchJobsWithFilters(
+    page = 1,
+    filters: {
+      search?: string;
+      category?: string;
+      industry?: string;
+      district?: string;
+      deadline?: string;
+      company?: string;
+      salary?: string;
+      sort?: string;
+      employment_status?: string;
+      workplace?: string;
+      gender?: string;
+      experience_field?: string;
+    } = {}
+  ): Promise<PaginatedResponse<JobModel>> {
+    // Directly pass the filters to the existing fetchJobs function.
+    return this.fetchJobs(page, filters);
   }
 
   static async fetchCompanyJobs(
@@ -151,27 +179,15 @@ export class JobModel {
     try {
       const queryParams = new URLSearchParams({
         page: String(page),
-        ...Object.fromEntries(
-          Object.entries(params).map(([key, val]) => [key, String(val)])
-        ),
+        ...Object.fromEntries(Object.entries(params).map(([key, val]) => [key, String(val)])),
       });
 
-      // Example: GET /jobs?page=1&search=Engineer
-      const response = await http_get(
-        `/company-jobs?${queryParams.toString()}`
-      );
-      // Your ApiResponser returns { code, message, data }
+      const response = await http_get(`/company-jobs?${queryParams.toString()}`);
       if (response.code !== 1) {
         throw new Error(response.message || "Failed to fetch jobs.");
       }
-
       const paginatedData: PaginatedResponse<any> = response.data;
-
-      // Convert each item in data[] to JobModel
-      paginatedData.data = paginatedData.data.map((item: any) =>
-        JobModel.fromJson(item)
-      );
-
+      paginatedData.data = paginatedData.data.map((item: any) => JobModel.fromJson(item));
       return paginatedData as PaginatedResponse<JobModel>;
     } catch (error) {
       console.error("Error fetching jobs:", error);
@@ -179,12 +195,6 @@ export class JobModel {
     }
   }
 
-  /**
-   * Fetch the currently authenticated user's jobs (my-jobs).
-   * Supports pagination and optional filtering.
-   * @param page The page number.
-   * @param params Additional query params (e.g., { search: 'Something', status: 'draft' })
-   */
   static async fetchMyJobs(
     page = 1,
     params: Record<string, string | number> = {}
@@ -192,25 +202,16 @@ export class JobModel {
     try {
       const queryParams = new URLSearchParams({
         page: String(page),
-        ...Object.fromEntries(
-          Object.entries(params).map(([key, val]) => [key, String(val)])
-        ),
+        ...Object.fromEntries(Object.entries(params).map(([key, val]) => [key, String(val)])),
       });
 
-      // Example: GET /my-jobs?page=1&search=Engineer
       const response = await http_get(`/my-jobs?${queryParams.toString()}`);
       console.log(response);
       if (response.code !== 1) {
         throw new Error(response.message || "Failed to fetch user jobs.");
       }
-
       const paginatedData: PaginatedResponse<any> = response.data;
-
-      // Convert each item in data[] to JobModel
-      paginatedData.data = paginatedData.data.map((item: any) =>
-        JobModel.fromJson(item)
-      );
-
+      paginatedData.data = paginatedData.data.map((item: any) => JobModel.fromJson(item));
       return paginatedData as PaginatedResponse<JobModel>;
     } catch (error) {
       console.error("Error fetching my-jobs:", error);
@@ -218,12 +219,6 @@ export class JobModel {
     }
   }
 
-  /**
-   * Fetch a single job by ID from the 'jobs' endpoint
-   * e.g. GET /jobs/123
-   * @param id The job ID
-   * @returns A single JobModel instance
-   */
   static async fetchJobById(id: string | number): Promise<JobModel> {
     try {
       const response = await http_get(`/jobs/${id}`);
@@ -237,15 +232,8 @@ export class JobModel {
     }
   }
 
-  /**
-   * Create a new job on the server
-   * e.g. POST /jobs
-   * @param jobData The JobModel instance or object representing the job
-   * @returns The newly created JobModel from the API
-   */
   static async createJob(jobData: Partial<JobModel>): Promise<JobModel> {
     try {
-      // Convert to JSON for submission
       const response = await http_post("/jobs", jobData);
       if (response.code !== 1) {
         throw new Error(response.message || "Failed to create job.");
@@ -257,17 +245,7 @@ export class JobModel {
     }
   }
 
-  /**
-   * Update an existing job on the server
-   * e.g. PUT /jobs/{id}
-   * @param id The ID of the job to update
-   * @param jobData The updated data
-   * @returns The updated JobModel instance from the API
-   */
-  static async updateJob(
-    id: string | number,
-    jobData: Partial<JobModel>
-  ): Promise<JobModel> {
+  static async updateJob(id: string | number, jobData: Partial<JobModel>): Promise<JobModel> {
     try {
       const response = await http_post(`/jobs/${id}?_method=PUT`, jobData);
       if (response.code !== 1) {
@@ -280,12 +258,6 @@ export class JobModel {
     }
   }
 
-  /**
-   * Delete a job by ID
-   * e.g. DELETE /jobs/{id}
-   * @param id The job ID
-   * @returns boolean - true if deleted successfully
-   */
   static async deleteJob(id: string | number): Promise<boolean> {
     try {
       const response = await http_post(`/jobs/${id}?_method=DELETE`, {});

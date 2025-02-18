@@ -126,7 +126,9 @@ const MegaMenuELearning: FC = () => {
               Master new skills with our courses
             </div>
           </div>
-          <a className="btn btn-sm btn-primary fw-bold">Try 8Learning</a>
+          <Link className="btn btn-sm btn-primary fw-bold" to="/8learning">
+            Try 8Learning
+          </Link>
         </div>
         {/* end:Layout Builder */}
       </div>

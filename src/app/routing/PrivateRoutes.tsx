@@ -26,9 +26,6 @@ const PrivateRoutes = () => {
   );
 
   const MyCVPage = lazy(() => import("../pages/private/MyCVPage"));
-  const CompanyProfileViewsPage = lazy(
-    () => import("../pages/private/CompanyProfileViewsPage")
-  );
   const MyCompanyFollowsPage = lazy(
     () => import("../pages/private/MyCompanyFollowsPage")
   );
@@ -195,10 +192,10 @@ const PrivateRoutes = () => {
           }
         />
         <Route
-          path="company-profile-views"
+          path="my-cv-views"
           element={
             <SuspensedView>
-              <CompanyProfileViewsPage />
+              <MyCvViewsPage />
             </SuspensedView>
           }
         />

@@ -19,7 +19,7 @@ export function HeaderWrapper() {
   return (
     <div
       id="kt_app_header"
-      className="app-header"
+      className="app-header bg-white border-bottom border-secondary shadow "
       data-kt-sticky="true"
       data-kt-sticky-activate="{default: true, lg: true}"
       data-kt-sticky-name="app-header-minimize"
@@ -72,14 +72,14 @@ export function HeaderWrapper() {
                 <img
                   alt="Logo"
                   src={toAbsoluteUrl("media/logos/default-dark.svg")}
-                  className="h-20px h-lg-30px app-sidebar-logo-default"
+                  className="h-30px h-lg-30px app-sidebar-logo-default"
                 />
               ) : (
                 <>
                   <img
                     alt="Logo"
                     src={toAbsoluteUrl("media/logos/default.svg")}
-                    className="h-20px h-lg-30px app-sidebar-logo-default theme-light-show"
+                    className="h-30px h-lg-30px app-sidebar-logo-default theme-light-show"
                   />
                   <img
                     alt="Logo"

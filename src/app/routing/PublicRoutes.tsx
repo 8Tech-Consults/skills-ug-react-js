@@ -17,6 +17,7 @@ const LAYOUT_CONFIG_KEY =
 
 const PublicRoutes = () => {
   const JobDetailPage = lazy(() => import("../pages/public/JobDetailPage"));
+  const EightLearningLandingPage = lazy(() => import("../pages/public/8learningLandingPage"));
   const ApplyJobPage = lazy(() => import("../pages/public/ApplyJobPage"));
   const CvBankPage = lazy(() => import("../pages/public/CvBankPage"));
   const CvPDFPage = lazy(() => import("../pages/public/CvPDFPage"));
@@ -87,6 +88,14 @@ const PublicRoutes = () => {
           element={
             <SuspensedView>
               <CvBankPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="8learning"
+          element={
+            <SuspensedView>
+              <EightLearningLandingPage />
             </SuspensedView>
           }
         />

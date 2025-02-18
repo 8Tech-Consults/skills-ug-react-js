@@ -17,7 +17,7 @@ export const adminLayoutConfig: ILayout = {
       layoutType: "default",
       mode: "light",
       rtl: false,
-      primaryColor: "#50CD89",
+      primaryColor: "#114786",
       pageBgWhite: false,
       pageWidth: "default",
     },
@@ -118,7 +118,7 @@ export const adminLayoutConfig: ILayout = {
     pageLoader: {
       componentName: "page-loader",
       type: "none",
-      logoImage: "default.svg",
+      logoImage: "logo-2.svg",
       logoClass: "mh-75px",
     },
   },

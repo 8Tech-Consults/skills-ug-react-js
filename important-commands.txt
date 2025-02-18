@@ -1,7 +1,5 @@
-# Important AI Prompt Commands
+primary colour 
+#114786
 
-## Generate a Model
- Create a react js Model with following properties, only id is integer and rest are string.  Add toJson, fromJson, from json list, to json list methods. In the model, include following localstorage methods: save, fetch, fetchById, delete, update and deleteAll.
- The following are the properties:
-
- 
+accent colour
+#f33d02
