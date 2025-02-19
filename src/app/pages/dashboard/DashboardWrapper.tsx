@@ -22,6 +22,7 @@ import { JobSeekerManifest } from "../../models/JobSeekerManifest";
 import { toast } from "react-toastify";
 import clsx from "clsx";
 import { getCSSVariableValue } from "../../../_metronic/assets/ts/_utils";
+import { Link } from "react-router-dom";
 
 const initChart = function (
   chartSize: number = 70,
@@ -100,25 +101,9 @@ const DashboardPage: React.FC = () => {
       return;
     }
     setUserManifest(userMan);
-    /* 
-      cv_views: number = 0;
-  profile_completion_percentage: number = 0;
-  job_application_count: number = 0;
-  job_application_pending: number = 0;
-  job_application_accepted: number = 0;
-  job_application_rejected: number = 0;
-
-  // Detailed lists – you might want to type these more strictly in your real code
-  job_offers: any[] = [];
-  job_applications: any[] = [];
-  upcoming_interviews: any[] = [];
-  saved_jobs: any[] = [];
-
-    */
-    // Your code here
   };
   useEffect(() => {
-    // myInit();
+    myInit();
   }, []);
   return (
     <>
@@ -333,11 +318,189 @@ const DashboardPage: React.FC = () => {
         {/* begin::Row */}
         <div className="row gy-5 gx-xl-8">
           <div className="col-xxl-4">
-            <ListsWidget3 className="card-xxl-stretch mb-xl-3" />
+            <div className={`card card-xxl-stretch mb-xl-3`}>
+              {/* begin::Header */}
+              <div className="card-header border-0">
+                <h3 className="card-title fw-bold text-gray-900">
+                  My jobs offers
+                </h3>
+                <div className="card-toolbar">
+                  <Link
+                    className="btn btn-sm btn-light-primary"
+                    to={"/admin/my-job-offers"}
+                  >
+                    View All
+                  </Link>
+                </div>
+              </div>
+              {/* end::Header */}
+              {/* begin::Body */}
+              <div className="card-body pt-2">
+                {userManifest.job_offers?.length ? (
+                  userManifest.job_offers.map((offer) => {
+                    const getClasses = () => {
+                      switch (offer.status) {
+                        case "Pending":
+                          return {
+                            bullet: "bg-warning",
+                            badge: "badge-light-warning",
+                          };
+                        case "Declined":
+                          return {
+                            bullet: "bg-danger",
+                            badge: "badge-light-danger",
+                          };
+                        case "Accepted":
+                          return {
+                            bullet: "bg-success",
+                            badge: "badge-light-success",
+                          };
+                        default:
+                          return {
+                            bullet: "bg-secondary",
+                            badge: "badge-light-secondary",
+                          };
+                      }
+                    };
+                    const { bullet, badge } = getClasses();
+                    return (
+                      <div
+                        className="d-flex align-items-center mb-8"
+                        key={offer.id}
+                      >
+                        <span
+                          className={`bullet bullet-vertical h-40px ${bullet}`}
+                        ></span>
+                        <div className="form-check form-check-custom form-check-solid mx-5">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            value=""
+                          />
+                        </div>
+                        <div className="flex-grow-1">
+                          <a
+                            href="#"
+                            className="text-gray-800 text-hover-primary fw-bold fs-6"
+                          >
+                            {offer.job_title}
+                          </a>
+                          <span className="text-muted fw-semibold d-block">
+                            {offer.company_name} - {offer.start_date}
+                          </span>
+                        </div>
+                        <span className={`badge fs-8 fw-bold ${badge}`}>
+                          {offer.status}
+                        </span>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="d-flex flex-column align-items-center text-center">
+                    <i className="bi bi-briefcase fs-1 text-muted mb-3"></i>
+                    <span className="text-muted fw-semibold">
+                      No recent job offers
+                    </span>
+                  </div>
+                )}
+              </div>
+              {/* end::Body */}
+            </div>
           </div>
-          <div className="col-xl-8">
-            <TablesWidget10 className="card-xxl-stretch mb-5 mb-xl-8" />
-          </div>
+            <div className="col-xl-8">
+            <div className="card card-xxl-stretch mb-5 mb-xl-8">
+              <div className="card-header border-0 pt-5 d-flex justify-content-between">
+              <h3 className="card-title flex-column">
+                <span className="card-label fw-bold fs-3 mb-1">
+                Job Applications
+                </span>
+                <span className="text-muted mt-1 fw-semibold fs-7">
+                {userManifest.job_applications?.length
+                  ? `Over ${userManifest.job_applications.length} Applications`
+                  : "No applications found"}
+                </span>
+              </h3>
+              <div className="card-toolbar">
+                <Link
+                to="/admin/my-job-applications"
+                className="btn btn-sm btn-light-primary"
+                >
+                <KTIcon iconName="eye" className="fs-3" />
+                View All
+                </Link>
+              </div>
+              </div>
+              <div className="card-body py-3">
+              {userManifest.job_applications?.length ? (
+                <div className="table-responsive">
+                <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                  <thead>
+                  <tr className="fw-bold text-muted">
+                    <th className="min-w-100px">Date</th>
+                    <th className="min-w-120px">Job Title</th>
+                    <th className="min-w-100px">Company</th>
+                    <th className="min-w-100px">Status</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {userManifest.job_applications.map((app) => {
+                    const getStatusClass = (status: string) => {
+                    switch (status) {
+                      case "Accepted":
+                      return "badge-light-success";
+                      case "Rejected":
+                      return "badge-light-danger";
+                      case "Pending":
+                      return "badge-light-warning";
+                      default:
+                      return "badge-light-info";
+                    }
+                    };
+                    return (
+                    <tr key={app.id}>
+                      <td>
+                      <span className="text-gray-900 fs-7">
+                        {new Date(app.created_at).toLocaleString()}
+                      </span>
+                      </td>
+                      <td>
+                      <span className="text-gray-900 fw-bold fs-6">
+                        {app.job_text}
+                      </span>
+                      </td>
+                      <td>
+                      <span className="text-gray-900 fw-bold fs-6">
+                        {app.employer_text}
+                      </span>
+                      </td>
+
+                      <td>
+                      <span
+                        className={
+                        "badge fs-8 fw-bold " +
+                        getStatusClass(app.status)
+                        }
+                      >
+                        {app.status}
+                      </span>
+                      </td>
+                    </tr>
+                    );
+                  })}
+                  </tbody>
+                </table>
+                </div>
+              ) : (
+                <div className="d-flex flex-column align-items-center text-center">
+                <i className="bi bi-briefcase fs-1 text-muted mb-3"></i>
+                <span className="text-muted fw-semibold">
+                  No job applications available
+                </span>
+                </div>
+              )}
+              </div>
+            </div>
+            </div>
         </div>
         {/* end::Row */}
 
