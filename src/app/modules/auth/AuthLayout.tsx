@@ -60,27 +60,27 @@ const AuthLayout = () => {
       >
         <div className="d-flex flex-column flex-center py-15 px-5 px-md-15 w-100">
           {/* Logo */}
-          <Link to="/" className="mb-12">
+          {/* <Link to="/" className="mb-12">
             <img
               alt="Logo"
               src={toAbsoluteUrl("media/logos/custom-1.png")}
               className="h-75px"
             />
-          </Link>
+          </Link> */}
 
           {/* Image */}
-          <img
+          {/*  <img
             className="mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
             src={toAbsoluteUrl("media/misc/auth-screens.png")}
             alt=""
           />
+ */}
 
-          {/* Title */}
-          <h1 className="text-white fs-2qx fw-bolder text-center mb-7">
+          {/*  <h1 className="text-white fs-2qx fw-bolder text-center mb-7">
             Largets Job Portal - in Uganda
           </h1>
 
-          {/* Description */}
+     
           <div className="text-white fs-base text-center">
             Welcome to Uganda's largest job portal.{" "}
             <a href="#" className="opacity-75-hover text-warning fw-bold me-1">
@@ -91,7 +91,7 @@ const AuthLayout = () => {
               post job listings
             </a>
             and connect with top talent.
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

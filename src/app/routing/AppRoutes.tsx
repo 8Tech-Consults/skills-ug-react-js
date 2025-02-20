@@ -21,6 +21,16 @@ const { BASE_URL } = import.meta.env;
  */
 const AppRoutes: FC = () => {
   const { currentUser } = useAuth();
+
+  if (currentUser) {
+    if (currentUser.verification != "Yes") {
+      var current_url = window.location.href;
+      if (!current_url.includes("auth/verify-email")) {
+        window.location.href = "/auth/verify-email";
+      }
+    }
+  }
+
   return (
     <BrowserRouter basename={BASE_URL}>
       <Routes>

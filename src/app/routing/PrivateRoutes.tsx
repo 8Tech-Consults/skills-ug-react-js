@@ -1,5 +1,5 @@
 import { lazy, FC, Suspense, useState, useEffect } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import { MasterLayout } from "../../_metronic/layout/MasterLayout";
 import TopBarProgress from "react-topbar-progress-indicator";
 import { DashboardWrapper } from "../pages/dashboard/DashboardWrapper";
@@ -17,6 +17,8 @@ import {
 import { adminLayoutConfig } from "../../_metronic/layout/core/layoutConfigs";
 import CompanyProfileEditPage from "../pages/private/profile-edit/CompanyProfileEditPage";
 import CompanyPostedJobsPage from "../pages/private/CompanyPostedJobsPage";
+import { useAuth } from "../modules/auth";
+import { toast } from "react-toastify";
 const LAYOUT_CONFIG_KEY =
   import.meta.env.VITE_APP_BASE_LAYOUT_CONFIG_KEY || "LayoutConfig";
 
@@ -65,8 +67,19 @@ const PrivateRoutes = () => {
   const [config, setConfig] = useState<ILayout>(adminLayoutConfig);
   const [configLoading, setConfigLoading] = useState<boolean>(false);
   const [resetLoading, setResetLoading] = useState<boolean>(false);
-
+  const { saveAuth, setCurrentUser, currentUser } = useAuth();
+  const navigate = useNavigate();
   const updatePrivate = () => {
+    if (currentUser) {
+      if (currentUser.verification != "Yes") {
+        var current_url = window.location.href;
+        if (!current_url.includes("auth/verify-email")) { 
+          window.location.href = "/auth/verify-email";
+          return;
+        }
+      }
+    }
+
     var shouldSetPrivateLayout = false;
     const ls = localStorage.getItem(LAYOUT_CONFIG_KEY);
     var myLocalLayout = DefaultConfig;
