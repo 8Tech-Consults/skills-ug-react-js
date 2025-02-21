@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import Utils from "../../../services/Utils";
 import { DB_LOGGED_IN_PROFILE } from "../core/AuthHelpers";
 
-// Schema for email verification (using "code" instead of "password")
 const verifySchema = Yup.object().shape({
   email: Yup.string()
     .email("Wrong email format")
@@ -18,18 +17,18 @@ const verifySchema = Yup.object().shape({
     .max(50, "Maximum 50 symbols")
     .required("Email is required"),
   code: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
+    .min(6, "Minimum 6 symbols")
+    .max(6, "Maximum 6 symbols")
     .required("Verification code is required"),
 });
 
 export function EmailVerify() {
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const { saveAuth, setCurrentUser, currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
-  // If not logged in, inform the user and redirect to login
   useEffect(() => {
     if (!currentUser) {
       toast.info("You are not logged in. Please login first.");
@@ -47,30 +46,31 @@ export function EmailVerify() {
       setStatus("");
       setSubmitting(true);
       setLoading(true);
+      setSuccessMessage("");
 
       try {
         const payload = {
           email: values.email,
           code: values.code,
         };
+        const data = await http_post(`/email-verify`, payload);
 
-        // Call the email-verify endpoint
-        var data = await http_post(`/email-verify`, payload);
-
-        if (data.verification != "Yes") {
-          throw new Error("Email verification is not successful");
+        if (data.verification !== "Yes") {
+          throw new Error("Email verification failed.");
         }
+        await Utils.update_logged_in_user();
+
+        //delay for 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await Utils.update_logged_in_user();
 
         toast.success("Email verified successfully!");
-        Utils.saveToDatabase(DB_LOGGED_IN_PROFILE, data);
+        setSuccessMessage("Email verified successfully!");
 
-        // Optionally update the auth state if needed:
-        // setCurrentUser({ ...currentUser, verified: true });
-        // And then navigate to the protected area:
-        location.href = "/admin/dashboard";
-      } catch (err: any) {
-        setStatus(err.toString());
-        toast.error(err.toString());
+        navigate("/admin/dashboard");
+      } catch (error: any) {
+        setStatus(error.message);
+        toast.error(error.message);
       } finally {
         setSubmitting(false);
         setLoading(false);
@@ -78,29 +78,34 @@ export function EmailVerify() {
     },
   });
 
-  // Handler to resend verification code
   const handleResendCode = async () => {
     setResendLoading(true);
     try {
-      await http_post(`/email-code-resend`, { email: currentUser?.email });
-      toast.success("Verification code resent successfully!");
-    } catch (err: any) {
-      toast.error("Failed to resend verification code. " + err.toString());
+      await http_post(`send-mail-verification-code`, {
+        email: currentUser?.email,
+      });
+      toast.success(
+        "Verification code resent successfully! Check your spam folder if not found in your inbox."
+      );
+    } catch (error: any) {
+      toast.error("Failed to resend verification code. " + error.message);
     } finally {
       setResendLoading(false);
     }
   };
 
-  // Handler to cancel the process and log the user out
   const handleCancel = async () => {
-    // If a logout function is provided by your auth context, call it.
-    if (logout) {
-      await logout();
-    } else {
-      setCurrentUser(undefined);
+    try {
+      if (logout) {
+        await logout();
+      } else {
+        setCurrentUser(undefined);
+      }
+      toast.info("You have been logged out.");
+      navigate("/auth/login");
+    } catch (error: any) {
+      toast.error("Logout failed. " + error.message);
     }
-    toast.info("You have been logged out.");
-    navigate("/auth/login");
   };
 
   return (
@@ -110,6 +115,19 @@ export function EmailVerify() {
       noValidate
       id="kt_email_verify_form"
     >
+      {/* add test button */}
+      {/* <button
+        type="button"
+        className="btn btn-primary"
+        onClick={async () => {
+          Utils.update_logged_in_user();
+          // const profile = Utils.getStorage(DB_LOGGED_IN_PROFILE);
+          // console.log("profile", profile);
+        }}
+      >
+        Test
+      </button> */}
+
       <div className="text-center mb-11">
         <div className="text-gray-500 fw-semibold fs-6">Email Verification</div>
         <h1 className="text-gray-900 fw-bolder mb-3 mt-1">Verify Your Email</h1>
@@ -125,6 +143,12 @@ export function EmailVerify() {
       {formik.status && (
         <div className="mb-lg-15 alert alert-danger">
           <div className="alert-text font-weight-bold">{formik.status}</div>
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="mb-lg-15 alert alert-success">
+          <div className="alert-text font-weight-bold">{successMessage}</div>
         </div>
       )}
 

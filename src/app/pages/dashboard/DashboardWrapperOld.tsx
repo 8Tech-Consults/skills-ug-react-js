@@ -109,9 +109,9 @@ const DashboardPage: React.FC = () => {
     <>
       {/* <ToolbarWrapper /> */}
       <Content>
-        {/*    <button className="btn btn-primary" onClick={() => myInit()}>
+        <button className="btn btn-primary" onClick={() => myInit()}>
           Test
-        </button> */}
+        </button>
         {/* begin::Row */}
         <div
           className="row g-5 g-xl-10 mb-5 mb-xl-10 "
@@ -407,108 +407,136 @@ const DashboardPage: React.FC = () => {
               {/* end::Body */}
             </div>
           </div>
-          <div className="col-xl-8">
+            <div className="col-xl-8">
             <div className="card card-xxl-stretch mb-5 mb-xl-8">
               <div className="card-header border-0 pt-5 d-flex justify-content-between">
-                <h3 className="card-title flex-column">
-                  <span className="card-label fw-bold fs-3 mb-1">
-                    Job Applications
-                  </span>
-                  <span className="text-muted mt-1 fw-semibold fs-7">
-                    {userManifest.job_applications?.length
-                      ? `Over ${userManifest.job_applications.length} Applications`
-                      : "No applications found"}
-                  </span>
-                </h3>
-                <div className="card-toolbar">
-                  <Link
-                    to="/admin/my-job-applications"
-                    className="btn btn-sm btn-light-primary"
-                  >
-                    <KTIcon iconName="eye" className="fs-3" />
-                    View All
-                  </Link>
-                </div>
+              <h3 className="card-title flex-column">
+                <span className="card-label fw-bold fs-3 mb-1">
+                Job Applications
+                </span>
+                <span className="text-muted mt-1 fw-semibold fs-7">
+                {userManifest.job_applications?.length
+                  ? `Over ${userManifest.job_applications.length} Applications`
+                  : "No applications found"}
+                </span>
+              </h3>
+              <div className="card-toolbar">
+                <Link
+                to="/admin/my-job-applications"
+                className="btn btn-sm btn-light-primary"
+                >
+                <KTIcon iconName="eye" className="fs-3" />
+                View All
+                </Link>
+              </div>
               </div>
               <div className="card-body py-3">
-                {userManifest.job_applications?.length ? (
-                  <div className="table-responsive">
-                    <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
-                      <thead>
-                        <tr className="fw-bold text-muted">
-                          <th className="min-w-100px">Date</th>
-                          <th className="min-w-120px">Job Title</th>
-                          <th className="min-w-100px">Company</th>
-                          <th className="min-w-100px">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {userManifest.job_applications.map((app) => {
-                          const getStatusClass = (status: string) => {
-                            switch (status) {
-                              case "Accepted":
-                                return "badge-light-success";
-                              case "Rejected":
-                                return "badge-light-danger";
-                              case "Pending":
-                                return "badge-light-warning";
-                              default:
-                                return "badge-light-info";
-                            }
-                          };
-                          return (
-                            <tr key={app.id}>
-                              <td>
-                                <span className="text-gray-900 fs-7">
-                                  {new Date(app.created_at).toLocaleString()}
-                                </span>
-                              </td>
-                              <td>
-                                <span className="text-gray-900 fw-bold fs-6">
-                                  {app.job_text}
-                                </span>
-                              </td>
-                              <td>
-                                <span className="text-gray-900 fw-bold fs-6">
-                                  {app.employer_text}
-                                </span>
-                              </td>
+              {userManifest.job_applications?.length ? (
+                <div className="table-responsive">
+                <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                  <thead>
+                  <tr className="fw-bold text-muted">
+                    <th className="min-w-100px">Date</th>
+                    <th className="min-w-120px">Job Title</th>
+                    <th className="min-w-100px">Company</th>
+                    <th className="min-w-100px">Status</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {userManifest.job_applications.map((app) => {
+                    const getStatusClass = (status: string) => {
+                    switch (status) {
+                      case "Accepted":
+                      return "badge-light-success";
+                      case "Rejected":
+                      return "badge-light-danger";
+                      case "Pending":
+                      return "badge-light-warning";
+                      default:
+                      return "badge-light-info";
+                    }
+                    };
+                    return (
+                    <tr key={app.id}>
+                      <td>
+                      <span className="text-gray-900 fs-7">
+                        {new Date(app.created_at).toLocaleString()}
+                      </span>
+                      </td>
+                      <td>
+                      <span className="text-gray-900 fw-bold fs-6">
+                        {app.job_text}
+                      </span>
+                      </td>
+                      <td>
+                      <span className="text-gray-900 fw-bold fs-6">
+                        {app.employer_text}
+                      </span>
+                      </td>
 
-                              <td>
-                                <span
-                                  className={
-                                    "badge fs-8 fw-bold " +
-                                    getStatusClass(app.status)
-                                  }
-                                >
-                                  {app.status}
-                                </span>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <div className="d-flex flex-column align-items-center text-center">
-                    <i className="bi bi-briefcase fs-1 text-muted mb-3"></i>
-                    <span className="text-muted fw-semibold">
-                      No job applications available
-                    </span>
-                  </div>
-                )}
+                      <td>
+                      <span
+                        className={
+                        "badge fs-8 fw-bold " +
+                        getStatusClass(app.status)
+                        }
+                      >
+                        {app.status}
+                      </span>
+                      </td>
+                    </tr>
+                    );
+                  })}
+                  </tbody>
+                </table>
+                </div>
+              ) : (
+                <div className="d-flex flex-column align-items-center text-center">
+                <i className="bi bi-briefcase fs-1 text-muted mb-3"></i>
+                <span className="text-muted fw-semibold">
+                  No job applications available
+                </span>
+                </div>
+              )}
               </div>
             </div>
+            </div>
+        </div>
+        {/* end::Row */}
+
+        {/* begin::Row */}
+        <div className="row gy-5 g-xl-8">
+          <div className="col-xl-4">
+            <ListsWidget2 className="card-xl-stretch mb-xl-8" />
+          </div>
+          <div className="col-xl-4">
+            <ListsWidget6 className="card-xl-stretch mb-xl-8" />
+          </div>
+          <div className="col-xl-4">
+            <ListsWidget4 className="card-xl-stretch mb-5 mb-xl-8" items={5} />
+            {/* partials/widgets/lists/_widget-4', 'class' => 'card-xl-stretch mb-5 mb-xl-8', 'items' => '5' */}
           </div>
         </div>
         {/* end::Row */}
+
+        <div className="row g-5 gx-xxl-8">
+          <div className="col-xxl-4">
+            <MixedWidget8
+              className="card-xxl-stretch mb-xl-3"
+              chartColor="success"
+              chartHeight="150px"
+            />
+          </div>
+          <div className="col-xxl-8">
+            <TablesWidget5 className="card-xxl-stretch mb-5 mb-xxl-8" />
+          </div>
+        </div>
       </Content>
     </>
   );
 };
 
-const DashboardWrapper: FC = () => {
+const DashboardWrapperOld: FC = () => {
   const intl = useIntl();
   return (
     <>
@@ -520,4 +548,4 @@ const DashboardWrapper: FC = () => {
   );
 };
 
-export { DashboardWrapper };
+export { DashboardWrapperOld };

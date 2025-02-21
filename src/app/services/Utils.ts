@@ -1,7 +1,79 @@
-import { BASE_URL, DB_LOGGED_IN_PROFILE } from "../../Constants";
+import { BASE_URL, DB_LOGGED_IN_PROFILE, DB_TOKEN } from "../../Constants";
 import { ProfileModel } from "../models/ProfileModel";
+import { http_get } from "./Api";
 
 class Utils {
+  static async update_logged_in_user() {
+    var resp = null;
+
+    try {
+      resp = await http_get("users/me");
+    } catch (error) {
+      return;
+    }
+    if (resp == null) {
+      return;
+    }
+    if (resp == undefined) {
+      return;
+    }
+    if (resp == "undefined") {
+      return;
+    }
+    if (resp == "") {
+      return;
+    }
+    //check if resp.code is set
+    if (resp.code == null) {
+      return;
+    }
+    if (resp.code == undefined) {
+      return;
+    }
+    if (resp.code != 1) {
+      return;
+    }
+
+    if (resp.data == null) {
+      return;
+    }
+    if (resp.data == undefined) {
+      Utils.saveToDatabase(DB_TOKEN, null);
+      Utils.saveToDatabase(DB_LOGGED_IN_PROFILE, null);
+      return;
+    }
+    if (resp.data == "undefined") {
+      //logout user by delete token and profile
+      Utils.saveToDatabase(DB_TOKEN, null);
+      Utils.saveToDatabase(DB_LOGGED_IN_PROFILE, null);
+
+      return;
+    }
+    if (resp.data == "") {
+      return;
+    }
+
+    // Utils.saveToDatabase(DB_TOKEN, token);
+    try {
+      Utils.saveToDatabase(DB_LOGGED_IN_PROFILE, resp.data);
+    } catch (error) {
+      alert("" + error);
+    }
+
+    var local_user_data = Utils.loadFromDatabase(DB_LOGGED_IN_PROFILE);
+
+    if (
+      local_user_data == null ||
+      local_user_data == undefined ||
+      local_user_data == "undefined" ||
+      local_user_data == ""
+    ) {
+      alert("local_user_data is null");
+      return;
+    }
+    console.log("local_user_data", local_user_data);
+    return local_user_data;
+  }
   static formatDateTime(interview_scheduled_at: string) {
     var date = new Date(interview_scheduled_at);
     return date.toLocaleString();
@@ -11,12 +83,14 @@ class Utils {
     if (!name) return "";
     const parts = name.trim().split(" ");
     if (parts.length === 1) {
-        return parts[0].charAt(0).toUpperCase();
+      return parts[0].charAt(0).toUpperCase();
     } else if (parts.length >= 2) {
-        return `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`.toUpperCase();
+      return `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(
+        0
+      )}`.toUpperCase();
     }
     return "";
-}
+  }
 
   //formatDate
   static formatDate(date: string) {

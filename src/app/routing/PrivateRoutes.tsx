@@ -19,6 +19,7 @@ import CompanyProfileEditPage from "../pages/private/profile-edit/CompanyProfile
 import CompanyPostedJobsPage from "../pages/private/CompanyPostedJobsPage";
 import { useAuth } from "../modules/auth";
 import { toast } from "react-toastify";
+import Utils from "../services/Utils";
 const LAYOUT_CONFIG_KEY =
   import.meta.env.VITE_APP_BASE_LAYOUT_CONFIG_KEY || "LayoutConfig";
 
@@ -71,9 +72,12 @@ const PrivateRoutes = () => {
   const navigate = useNavigate();
   const updatePrivate = () => {
     if (currentUser) {
+      try {
+        Utils.update_logged_in_user();
+      } catch (error) {}
       if (currentUser.verification != "Yes") {
         var current_url = window.location.href;
-        if (!current_url.includes("auth/verify-email")) { 
+        if (!current_url.includes("auth/verify-email")) {
           window.location.href = "/auth/verify-email";
           return;
         }
