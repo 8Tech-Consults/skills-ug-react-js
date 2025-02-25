@@ -355,9 +355,7 @@ const EmployersPage: React.FC<EmployersPageProps> = () => {
                           <div className="card-body">
                             <div className="d-flex align-items-center mb-3">
                               <img
-                                src={Utils.img(
-                                  company.company_logo || "default-company.png"
-                                )}
+                                src={Utils.img(company.company_logo)}
                                 alt="Company"
                                 style={{
                                   width: "60px",
