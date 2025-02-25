@@ -1,8 +1,22 @@
+import { toAbsoluteUrl } from "../../_metronic/helpers";
 import { BASE_URL, DB_LOGGED_IN_PROFILE, DB_TOKEN } from "../../Constants";
 import { ProfileModel } from "../models/ProfileModel";
 import { http_get } from "./Api";
 
 class Utils {
+  static async get_logged_in_user() {
+    var local_user_data = Utils.loadFromDatabase(DB_LOGGED_IN_PROFILE);
+
+    if (
+      local_user_data == null ||
+      local_user_data == undefined ||
+      local_user_data == "undefined" ||
+      local_user_data == ""
+    ) {
+      return null;
+    }
+    return ProfileModel.fromJson(JSON.stringify(local_user_data));
+  }
   static async update_logged_in_user() {
     var resp = null;
 
@@ -71,7 +85,7 @@ class Utils {
       alert("local_user_data is null");
       return;
     }
-    console.log("local_user_data", local_user_data);
+    // console.log("local_user_data", local_user_data);
     return local_user_data;
   }
   static formatDateTime(interview_scheduled_at: string) {
@@ -177,7 +191,8 @@ class Utils {
   }
 
   static img(url: any) {
-    var default_img = BASE_URL + "/storage/images/default.png";
+    // var default_img = BASE_URL + "/storage/images/default.png";
+    var default_img = toAbsoluteUrl("media/logos/logo.svg");
     if (url === null) {
       return default_img;
     }
@@ -194,6 +209,10 @@ class Utils {
       return default_img;
     }
 
+    if (url.length < 4) {
+      return default_img;
+    }
+
     var last_segment = "";
     try {
       last_segment = url.split("/").pop() || "";
@@ -202,6 +221,9 @@ class Utils {
       return "";
     }
     if (last_segment === "undefined") {
+      return "";
+    }
+    if (last_segment == "default-company.png") {
       return "";
     }
     if (last_segment === "null") {

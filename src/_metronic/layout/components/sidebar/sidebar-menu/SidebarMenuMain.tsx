@@ -3,9 +3,15 @@ import { KTIcon } from "../../../../helpers";
 import { SidebarMenuItemWithSub } from "./SidebarMenuItemWithSub";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { Zoom } from "react-toastify";
+import { useAuth } from "../../../../../app/modules/auth";
 
 const SidebarMenuMain = () => {
+  const { currentUser, logout } = useAuth();
   const intl = useIntl();
+
+  if (!currentUser) {
+    return null;
+  }
 
   return (
     <>
@@ -15,6 +21,105 @@ const SidebarMenuMain = () => {
         title={intl.formatMessage({ id: "MENU.DASHBOARD" })}
         fontIcon="bi-app-indicator"
       />
+
+      <SidebarMenuItemWithSub
+        to="/crafted/pages/profile"
+        title="My Activities"
+        hasBullet={false}
+        icon="media/icons/duotune/maps/map009.svg"
+        fontIcon="bi-app-indicator"
+      >
+        <SidebarMenuItem
+          to="/admin/my-job-applications"
+          title="My Job Applications"
+          hasBullet={true}
+        />
+
+        <SidebarMenuItem
+          to="/admin/my-job-interviews"
+          title="Shortlisted "
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/my-job-offers"
+          title="My Job Offers"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/my-company-follows"
+          title="Followed Companies"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/admin/my-cv-views"
+          title="My CV views"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+
+      {currentUser.is_company === "Yes" && (
+        <SidebarMenuItemWithSub
+          to="/company/"
+          title="Company activities"
+          hasBullet={false}
+          icon="media/icons/duotune/general/gen019.svg"
+          fontIcon="bi-app-indicator"
+        >
+          <SidebarMenuItem
+            to="/admin/job-create"
+            title="Post a Job"
+            hasBullet={true}
+          />
+          <SidebarMenuItem
+            to="/admin/company-jobs"
+            title="Posted Jobs"
+            hasBullet={true}
+          />
+          <SidebarMenuItem
+            to="/admin/company-job-applications"
+            title="Job Applications"
+            hasBullet={true}
+          />
+          <SidebarMenuItem
+            to="/admin/company-profile-edit"
+            title="Company Profile"
+            hasBullet={true}
+          />
+          <SidebarMenuItem
+            to="/admin/company-job-offers"
+            title="Job Offers"
+            hasBullet={true}
+          />
+          <SidebarMenuItem
+            to="/admin/company-followers"
+            title="Company Followers"
+            hasBullet={true}
+          />
+          <SidebarMenuItem
+            to="/admin/company-profile-views"
+            title="Company Profile Views"
+            hasBullet={true}
+          />
+        </SidebarMenuItemWithSub>
+      )}
+
+      {currentUser.is_company !== "Yes" && (
+        <SidebarMenuItem
+          to="/admin/company-profile-edit"
+          title="Register as a company"
+          hasBullet={true}
+        />
+      )}
+
+      <SidebarMenuItemWithSub
+        to="/crafted/pages/profile"
+        title="8Learning"
+        hasBullet={false}
+        icon="media/icons/duotune/graphs/gra006.svg"
+        fontIcon="bi-app-indicator"
+      >
+        <SidebarMenuItem to="/admin" title="My Courses" hasBullet={true} />
+      </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
         to="/crafted/pages/profile"
         title="Manage My Profile"
@@ -66,131 +171,17 @@ const SidebarMenuMain = () => {
 
       <SidebarMenuItemWithSub
         to="/crafted/pages/profile"
-        title="My Activities"
-        hasBullet={false}
-        icon="media/icons/duotune/maps/map009.svg"
-        fontIcon="bi-app-indicator"
-      >
-        <SidebarMenuItem
-          to="/admin/my-job-applications"
-          title="My Job Applications"
-          hasBullet={true}
-        />
-
-        <SidebarMenuItem
-          to="/admin/my-job-interviews"
-          title="Shortlisted "
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/my-job-offers"
-          title="My Job Offers"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/my-company-follows"
-          title="Followed Companies"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/my-cv-views"
-          title="My CV views"
-          hasBullet={true}
-        />
-      </SidebarMenuItemWithSub>
-
-      <SidebarMenuItemWithSub
-        to="/company/"
-        title="Company activities"
-        hasBullet={false}
-        icon="media/icons/duotune/general/gen019.svg"
-        fontIcon="bi-app-indicator"
-      >
-        <SidebarMenuItem
-          to="/admin/job-create"
-          title="Post a Job"
-          hasBullet={true}
-        />
-
-        <SidebarMenuItem
-          to="/admin/company-jobs"
-          title="Posted Jobs"
-          hasBullet={true}
-        />
-
-        <SidebarMenuItem
-          to="/admin/company-job-applications"
-          title="Job Applications"
-          hasBullet={true}
-        />
-
-        <SidebarMenuItem
-          to="/admin/company-profile-edit"
-          title="Company Profile"
-          hasBullet={true}
-        />
-
-        <SidebarMenuItem
-          to="/admin/company-job-offers"
-          title="Job Offers"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/company-followers"
-          title="Company Followers"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/company-profile-views"
-          title="Company Profile Views"
-          hasBullet={true}
-        />
-       
-      </SidebarMenuItemWithSub>
-
-      <SidebarMenuItemWithSub
-        to="/crafted/pages/profile"
-        title="8Learning"
-        hasBullet={false}
-        icon="media/icons/duotune/graphs/gra006.svg"
-        fontIcon="bi-app-indicator"
-      >
-        <SidebarMenuItem
-          to="/admin/job-create"
-          title="My Courses"
-          hasBullet={true}
-        />
-      </SidebarMenuItemWithSub>
-
-      <SidebarMenuItemWithSub
-        to="/crafted/pages/profile"
         title="My Account"
         hasBullet={false}
         icon="media/icons/duotune/communication/com006.svg"
         fontIcon="bi-app-indicator"
       >
-        <SidebarMenuItem
-          to="/admin/job-create"
-          title="Update Email"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/job-create"
-          title="Change password"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/admin/job-create"
-          title="Logout"
-          hasBullet={true}
-        />
+        <SidebarMenuItem to="/admin" title="Update Email" hasBullet={true} />
+        <SidebarMenuItem to="/admin" title="Change password" hasBullet={true} />
+        <SidebarMenuItem to="/admin" title="Logout" hasBullet={true} />
       </SidebarMenuItemWithSub>
 
-      <SidebarMenuItem
-        to="/admin/job-create"
-        title="Help Videos"
-        hasBullet={true}
-      />
+      <SidebarMenuItem to="/admin" title="Help Videos" hasBullet={true} />
 
       {/*
       <SidebarMenuItem

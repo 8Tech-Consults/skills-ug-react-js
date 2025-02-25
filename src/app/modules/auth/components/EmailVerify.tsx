@@ -29,12 +29,29 @@ export function EmailVerify() {
   const { saveAuth, setCurrentUser, currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
+  const checkUser = async () => {
+    await Utils.update_logged_in_user();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    var x = null;
+    x = await Utils.get_logged_in_user();
+    if (x == null) {
+      return;
+    }
+    if (x?.verification != "Yes") {
+      toast.error("User not verified.");
+      return;
+    }
+    navigate("/admin/dashboard");
+  };
+
   useEffect(() => {
     if (!currentUser) {
       toast.info("You are not logged in. Please login first.");
       navigate("/auth/login");
     }
   }, [currentUser, navigate]);
+
+  checkUser();
 
   const formik = useFormik({
     initialValues: {
@@ -116,11 +133,11 @@ export function EmailVerify() {
       id="kt_email_verify_form"
     >
       {/* add test button */}
-      {/* <button
+      {/*   <button
         type="button"
         className="btn btn-primary"
         onClick={async () => {
-          Utils.update_logged_in_user();
+          checkUser();
           // const profile = Utils.getStorage(DB_LOGGED_IN_PROFILE);
           // console.log("profile", profile);
         }}

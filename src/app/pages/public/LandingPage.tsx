@@ -74,8 +74,8 @@ const LandingPage: React.FC = () => {
       <LandingCategoriesSection manifest={my_manifest} />
       <LandingJobsSection manifest={my_manifest} />
       <LandingTendersSection manifest={my_manifest} />
-      <LandingSlidesSection />
-      <LandingCourseSection />
+{/*       <LandingSlidesSection />
+      <LandingCourseSection /> */}
       {/* <FooterSection /> */}
     </div>
   );

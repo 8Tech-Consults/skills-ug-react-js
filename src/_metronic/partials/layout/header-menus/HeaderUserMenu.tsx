@@ -42,14 +42,14 @@ const HeaderUserMenu: FC = () => {
         </Link>
       </div>
       <div className="menu-item px-5">
-        <Link to={"/crafted/pages/profile"} className="menu-link px-5">
-          Update My Profile
+        <Link to={"/admin/my-job-applications"} className="menu-link px-5">
+          My Job Applications
         </Link>
       </div>
 
       <div className="menu-item px-5">
-        <a href="#" className="menu-link px-5">
-          <span className="menu-text">My Projects</span>
+        <a href="/admin/my-job-offers" className="menu-link px-5">
+          <span className="menu-text">My Job Offers</span>
           <span className="menu-badge">
             <span className="badge badge-light-danger badge-circle fw-bolder fs-7">
               3
@@ -65,41 +65,57 @@ const HeaderUserMenu: FC = () => {
         data-kt-menu-flip="bottom"
       >
         <a href="#" className="menu-link px-5">
-          <span className="menu-title">My Subscription</span>
+          <span className="menu-title">Update My Profile</span>
           <span className="menu-arrow"></span>
         </a>
 
         <div className="menu-sub menu-sub-dropdown w-175px py-4">
           <div className="menu-item px-3">
-            <a href="#" className="menu-link px-5">
-              Referrals
-            </a>
+            <Link to="/admin/profile-edit/photo" className="menu-link px-5">
+              Change Profile Photo
+            </Link>
           </div>
 
           <div className="menu-item px-3">
-            <a href="#" className="menu-link px-5">
-              Billing
-            </a>
+            <Link to="/admin/profile-edit/bio" className="menu-link px-5">
+              Update Biodata
+            </Link>
           </div>
 
           <div className="menu-item px-3">
-            <a href="#" className="menu-link px-5">
-              Payments
-            </a>
+            <Link to="/admin/profile-edit/education" className="menu-link px-5">
+              Education & Training
+            </Link>
           </div>
 
           <div className="menu-item px-3">
-            <a href="#" className="menu-link d-flex flex-stack px-5">
-              Statements
+            <Link
+              to="/admin/profile-edit/employment"
+              className="menu-link px-5"
+            >
+              Employment History
               <i
                 className="fas fa-exclamation-circle ms-2 fs-7"
                 data-bs-toggle="tooltip"
                 title="View your statements"
               ></i>
-            </a>
+            </Link>
+          </div>
+          <div className="menu-item px-3">
+            <Link
+              to="/admin/profile-edit/accomplishment"
+              className="menu-link px-5"
+            >
+              Accomplishments
+              <i
+                className="fas fa-exclamation-circle ms-2 fs-7"
+                data-bs-toggle="tooltip"
+                title="View your statements"
+              ></i>
+            </Link>
           </div>
 
-          <div className="separator my-2"></div>
+          {/*   <div className="separator my-2"></div>
 
           <div className="menu-item px-3">
             <div className="menu-content px-3">
@@ -116,13 +132,13 @@ const HeaderUserMenu: FC = () => {
                 </span>
               </label>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
       <div className="menu-item px-5">
-        <a href="#" className="menu-link px-5">
-          My Statements
+        <a href="/admin/my-cv" className="menu-link px-5">
+          Download My CV
         </a>
       </div>
 
