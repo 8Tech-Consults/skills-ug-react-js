@@ -51,6 +51,12 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   };
 
   const logout = () => {
+    try {
+      Utils.saveToDatabase(DB_TOKEN, null);
+      Utils.saveToDatabase(DB_LOGGED_IN_PROFILE, null);
+    } catch (error) {
+      console.error(error);
+    }
     saveAuth(undefined);
     setCurrentUser(undefined);
   };
