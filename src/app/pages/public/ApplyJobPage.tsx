@@ -359,11 +359,7 @@ const ApplyJobPage: React.FC = () => {
               <p>
                 <strong>Your Message:</strong>{" "}
                 {formData.applicantMessage || "Not provided"}
-              </p>
-              <p>
-                <strong>Additional Info:</strong>{" "}
-                {formData.additionalInfo || "Not provided"}
-              </p>
+              </p> 
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" data-bs-dismiss="modal">

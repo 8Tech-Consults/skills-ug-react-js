@@ -20,7 +20,7 @@ const resetSchema = Yup.object().shape({
     .required("New password is required"),
   confirmPassword: Yup.string()
     .required("Password confirmation is required")
-    .oneOf([Yup.ref("password"), ''], "Passwords must match"),
+    .oneOf([Yup.ref("password"), ""], "Passwords must match"),
 });
 
 export function ForgotPassword() {
@@ -44,14 +44,14 @@ export function ForgotPassword() {
       try {
         const { email, code, password } = values;
         const data = await http_post(`/password-reset-submit`, {
-          'email': email,
-          'code': code,
-          'password': password,
+          email: email,
+          code: code,
+          password: password,
         });
 
-       
-
-        toast.success("Password reset successful! You can now login with your new password.");  
+        toast.success(
+          "Password reset successful! You can now login with your new password."
+        );
         navigate("/auth/login");
       } catch (error: any) {
         setStatus(error.message);

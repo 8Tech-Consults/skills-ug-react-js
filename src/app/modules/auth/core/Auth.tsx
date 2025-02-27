@@ -50,11 +50,13 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     try {
-      Utils.saveToDatabase(DB_TOKEN, null);
-      Utils.saveToDatabase(DB_LOGGED_IN_PROFILE, null);
+      Utils.deleteFromDatabase(DB_TOKEN);
+      Utils.deleteFromDatabase(DB_LOGGED_IN_PROFILE);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
+      alert("Error logging out. Please try again.");
       console.error(error);
     }
     saveAuth(undefined);

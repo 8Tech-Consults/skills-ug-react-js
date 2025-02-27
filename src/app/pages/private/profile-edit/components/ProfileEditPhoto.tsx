@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
@@ -220,20 +220,21 @@ const ProfileEditPhoto: React.FC = () => {
               <button
                 type="submit"
                 className="btn btn-primary"
-                onClick={() => setFieldValue("submitAction", "save")}
+                onClick={() => {
+                  handleSubmit(currentUser, { setSubmitting: () => {} });
+                }}
                 disabled={isSubmitting}
               >
                 <FiSave className="me-2" />
                 {isSubmitting ? "Saving..." : "Save"}
               </button>
-              <button
+              <Link
                 type="submit"
                 className="btn btn-success"
-                onClick={() => setFieldValue("submitAction", "saveAndNext")}
-                disabled={isSubmitting}
+                to="/admin/profile-edit/bio"
               >
                 Next Step <FiArrowRight className="ms-2" />
-              </button>
+              </Link>
             </div>
           </motion.div>
         </Form>

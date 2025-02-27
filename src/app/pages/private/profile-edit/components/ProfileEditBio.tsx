@@ -7,12 +7,10 @@ import {
   TextInput,
   DateInput,
   SelectInput,
-  SubmitButton,
   TextArea,
   RadioButton,
 } from "../../../../components/FormComponents";
 import { COUNTRIES } from "../../../../../Constants";
-import { useProfileEdit } from "../ProfileEditContext";
 import { ProfileModel } from "../../../../models/ProfileModel";
 import { useAuth } from "../../../../modules/auth";
 import { http_post } from "../../../../services/Api";
@@ -39,12 +37,12 @@ const ProfileEditBio: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setCurrentUser } = useAuth();
-  const { currentUser } = useAuth();
+  const { currentUser, setCurrentUser } = useAuth();
+
   const [districts, setDistricts] = useState<
     { value: string; label: string }[]
   >([]);
-  const [job_categories, setJobCategories] = useState<
+  const [jobCategories, setJobCategories] = useState<
     { value: string; label: string }[]
   >([]);
 
@@ -53,58 +51,51 @@ const ProfileEditBio: React.FC = () => {
     return null;
   }
 
+  // Only first_name and last_name are required; other fields are optional.
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().required("First Name is required"),
     last_name: Yup.string()
       .min(2, "Last Name must be at least 2 characters")
       .required("Last Name is required"),
-    sex: Yup.string().required("Gender is required"),
-    title: Yup.string().required("Title is required"),
   });
 
   useEffect(() => {
-    load_districts();
+    loadDistricts();
   }, []);
 
-  const load_districts = async () => {
-    var man = await ManifestModel.getItems();
-    if (man != null && man["CATEGORIES"] != null) {
-      var temp_cats = [];
-      //loop through the man["CATEGORIES"]
-      for (var key in man["CATEGORIES"]) {
-        var temp = man["CATEGORIES"][key];
-        if (temp == null) continue;
-        temp_cats.push({ value: temp["id"], label: temp["name"] });
+  const loadDistricts = async () => {
+    const man = await ManifestModel.getItems();
+    if (man && man["CATEGORIES"]) {
+      const tempCats = [];
+      for (const key in man["CATEGORIES"]) {
+        const temp = man["CATEGORIES"][key];
+        if (!temp) continue;
+        tempCats.push({ value: temp["id"], label: temp["name"] });
       }
-      if (temp_cats.length > 0) {
-        setJobCategories(temp_cats);
+      if (tempCats.length > 0) {
+        setJobCategories(tempCats);
       } else {
         alert("No job categories found");
       }
     }
 
-    var _districts = [];
+    let _districts = [];
     try {
       _districts = await DistrictModel.getItems();
     } catch (error) {
       alert("Failed to load districts: " + error);
       return;
     }
-
     if (_districts.length < 1) {
       alert("No districts found");
       return;
     }
-
-    setDistricts([]);
-    let districts_1 = [];
-    for (const item of _districts) {
-      if (item.name) {
-        districts_1.push({ value: item.id + "", label: item.name });
-      }
-    }
-    setDistricts(districts_1);
+    const districtsList = _districts
+      .filter((item) => item.name)
+      .map((item) => ({ value: item.id + "", label: item.name }));
+    setDistricts(districtsList);
   };
+
   const handleSubmit = async (values: typeof currentUser, actions: any) => {
     setErrorMessage("");
     setSuccessMessage("");
@@ -136,7 +127,7 @@ const ProfileEditBio: React.FC = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ values, isSubmitting, setFieldValue }) => (
+      {({ isSubmitting, setFieldValue }) => (
         <AnimatePresence mode="wait">
           <motion.div
             variants={fadeVariant}
@@ -179,14 +170,6 @@ const ProfileEditBio: React.FC = () => {
                 </motion.div>
               )}
 
-              {/*      <button
-                type="button"
-                className="btn btn-lg btn-info"
-                onClick={() => load_districts()}
-              >
-                collect data
-              </button>
- */}
               {successMessage && (
                 <motion.div
                   className="alert alert-success alert-dismissible fade show"
@@ -202,11 +185,12 @@ const ProfileEditBio: React.FC = () => {
                     className="btn-close"
                     data-bs-dismiss="alert"
                     aria-label="Close"
-                  ></button>
+                  />
                 </motion.div>
               )}
 
               <div className="accordion" id="profileEditAccordion">
+                {/* Personal Details Section */}
                 <motion.div
                   className="accordion-item"
                   variants={fadeVariant}
@@ -289,28 +273,7 @@ const ProfileEditBio: React.FC = () => {
                               { value: "Female", label: "Female" },
                               { value: "Other", label: "Other" },
                             ]}
-                            component={(props: any) => (
-                              <SelectInput {...props} />
-                            )}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row mb-3">
-                        <div className="col-md-6">
-                          <Field
-                            name="father_name"
-                            label="Father's Name"
-                            placeholder="Enter Father's Name"
-                            component={TextInput}
-                          />
-                        </div>
-                        <div className="col-md-6">
-                          <Field
-                            name="mother_name"
-                            label="Mother's Name"
-                            placeholder="Enter Mother's Name"
-                            component={TextInput}
+                            component={SelectInput}
                           />
                         </div>
                       </div>
@@ -363,7 +326,7 @@ const ProfileEditBio: React.FC = () => {
                       </div>
 
                       <div className="row mb-3">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                           <Field
                             name="languages"
                             label="Languages"
@@ -371,43 +334,10 @@ const ProfileEditBio: React.FC = () => {
                             component={TextInput}
                           />
                         </div>
-                        <div className="col-md-6">
-                          <Field
-                            name="blood_group"
-                            label="Blood Group"
-                            options={[
-                              { value: "A+", label: "A+" },
-                              { value: "A-", label: "A-" },
-                              { value: "B+", label: "B+" },
-                              { value: "B-", label: "B-" },
-                              { value: "O+", label: "O+" },
-                              { value: "O-", label: "O-" },
-                              { value: "AB+", label: "AB+" },
-                              { value: "AB-", label: "AB-" },
-                            ]}
-                            component={SelectInput}
-                          />
-                        </div>
                       </div>
 
                       <div className="row mb-3">
-                        <div className="col-md-4">
-                          <Field
-                            name="height"
-                            label="Height"
-                            placeholder="e.g. 170 cm"
-                            component={TextInput}
-                          />
-                        </div>
-                        <div className="col-md-4">
-                          <Field
-                            name="weight"
-                            label="Weight"
-                            placeholder="e.g. 65 kg"
-                            component={TextInput}
-                          />
-                        </div>
-                        <div className="col-md-4">
+                        <div className="col-md-12">
                           <Field
                             name="has_disability"
                             label="Do you have a disability?"
@@ -419,7 +349,9 @@ const ProfileEditBio: React.FC = () => {
                               <RadioButton
                                 {...props}
                                 radioClass="form-check form-check-inline"
-                                onChange={(e) => {
+                                onChange={(
+                                  e: React.ChangeEvent<HTMLInputElement>
+                                ) => {
                                   props.form.setFieldValue(
                                     props.field.name,
                                     e.target.value
@@ -486,72 +418,6 @@ const ProfileEditBio: React.FC = () => {
                                 />
                               </div>
                             </div>
-                            <div className="row mb-3">
-                              <div className="col-md-3">
-                                <Field
-                                  name="dificulty_to_see"
-                                  label="Difficulty to See"
-                                  options={[
-                                    { value: "Yes", label: "Yes" },
-                                    { value: "No", label: "No" },
-                                  ]}
-                                  component={(props: any) => (
-                                    <RadioButton
-                                      {...props}
-                                      radioClass="form-check form-check-inline"
-                                    />
-                                  )}
-                                />
-                              </div>
-                              <div className="col-md-3">
-                                <Field
-                                  name="dificulty_to_hear"
-                                  label="Difficulty to Hear"
-                                  options={[
-                                    { value: "Yes", label: "Yes" },
-                                    { value: "No", label: "No" },
-                                  ]}
-                                  component={(props: any) => (
-                                    <RadioButton
-                                      {...props}
-                                      radioClass="form-check form-check-inline"
-                                    />
-                                  )}
-                                />
-                              </div>
-                              <div className="col-md-3">
-                                <Field
-                                  name="dificulty_to_walk"
-                                  label="Difficulty to Walk"
-                                  options={[
-                                    { value: "Yes", label: "Yes" },
-                                    { value: "No", label: "No" },
-                                  ]}
-                                  component={(props: any) => (
-                                    <RadioButton
-                                      {...props}
-                                      radioClass="form-check form-check-inline"
-                                    />
-                                  )}
-                                />
-                              </div>
-                              <div className="col-md-3">
-                                <Field
-                                  name="dificulty_to_speak"
-                                  label="Difficulty to Speak"
-                                  options={[
-                                    { value: "Yes", label: "Yes" },
-                                    { value: "No", label: "No" },
-                                  ]}
-                                  component={(props: any) => (
-                                    <RadioButton
-                                      {...props}
-                                      radioClass="form-check form-check-inline"
-                                    />
-                                  )}
-                                />
-                              </div>
-                            </div>
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -559,6 +425,7 @@ const ProfileEditBio: React.FC = () => {
                   </div>
                 </motion.div>
 
+                {/* Contact & Identity Section */}
                 <motion.div
                   className="accordion-item"
                   variants={fadeVariant}
@@ -594,7 +461,7 @@ const ProfileEditBio: React.FC = () => {
                         <div className="col-md-6">
                           <Field
                             name="district_id"
-                            label="District"
+                            label="City"
                             placeholder="District of Residence"
                             options={districts}
                             component={SelectInput}
@@ -622,7 +489,7 @@ const ProfileEditBio: React.FC = () => {
                         <div className="col-md-6">
                           <Field
                             name="phone_number_1"
-                            label={<>Phone Number 1</>}
+                            label="Phone Number 1"
                             placeholder="Primary Contact No."
                             component={TextInput}
                             disabled
@@ -650,8 +517,8 @@ const ProfileEditBio: React.FC = () => {
                         <div className="col-md-6">
                           <Field
                             name="emergency_person_name"
-                            label="Emergency Contact Name"
-                            placeholder="Who to contact in emergency"
+                            label="Referee Name"
+                            placeholder="Enter Referee Name"
                             component={TextInput}
                           />
                         </div>
@@ -661,8 +528,8 @@ const ProfileEditBio: React.FC = () => {
                         <div className="col-md-6">
                           <Field
                             name="emergency_person_phone"
-                            label="Emergency Contact Phone"
-                            placeholder="Enter phone no."
+                            label="Referee Phone"
+                            placeholder="Enter Referee Phone"
                             component={TextInput}
                           />
                         </div>
@@ -709,6 +576,7 @@ const ProfileEditBio: React.FC = () => {
                   </div>
                 </motion.div>
 
+                {/* Professional & Job Preferences Section */}
                 <motion.div
                   className="accordion-item"
                   variants={fadeVariant}
@@ -822,7 +690,7 @@ const ProfileEditBio: React.FC = () => {
                             name="preferred_job_category"
                             label="Select Preferred Job Category"
                             placeholder="e.g. IT, Finance, Marketing"
-                            options={job_categories}
+                            options={jobCategories}
                             component={SelectInput}
                           />
                         </div>
@@ -923,8 +791,7 @@ const ProfileEditBio: React.FC = () => {
                     onClick={() => setFieldValue("submitAction", "saveAndNext")}
                     disabled={isSubmitting}
                   >
-                    Next Step
-                    <FiArrowRight className="ms-2" />
+                    Next Step <FiArrowRight className="ms-2" />
                   </button>
                 </div>
               </div>

@@ -95,11 +95,11 @@ const SidebarMenuMain = () => {
             title="Company Followers"
             hasBullet={true}
           />
-          <SidebarMenuItem
+         {/*  <SidebarMenuItem
             to="/admin/company-profile-views"
-            title="Company Profile Views"
+            title="Company Profile Views" 
             hasBullet={true}
-          />
+          /> */}
         </SidebarMenuItemWithSub>
       )}
 

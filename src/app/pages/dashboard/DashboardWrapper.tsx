@@ -322,7 +322,7 @@ const DashboardPage: React.FC = () => {
               {/* begin::Header */}
               <div className="card-header border-0">
                 <h3 className="card-title fw-bold text-gray-900">
-                  My jobs offers as
+                  My jobs offers
                 </h3>
                 <div className="card-toolbar">
                   <Link

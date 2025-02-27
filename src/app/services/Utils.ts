@@ -131,8 +131,11 @@ class Utils {
   static toJsonList(objList: any) {
     return JSON.stringify(objList);
   }
-
+  static deleteFromDatabase(local_path: any) {
+    localStorage.removeItem(local_path);
+  }
   // Save an object to the local database
+
   static saveToDatabase(local_path: any, obj: any) {
     if (obj === null) {
       return;
