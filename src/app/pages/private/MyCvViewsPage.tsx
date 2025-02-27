@@ -131,7 +131,6 @@ const MyCvViewsPage: React.FC<MyCvViewsPageProps> = () => {
           animate="visible"
           exit="exit"
         >
-     
           <div className="card-body">
             {isLoading && (
               <div className="text-center py-5">
