@@ -8,7 +8,7 @@ import { PageTitle } from "../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { ProfileModel } from "../../models/ProfileModel";
 import { BASE_URL } from "../../../Constants";
-import { pageSkeleton } from "./JobDetailPage";
+import { JobSkeleton } from "./JobDetailPage";
 
 export default function CvPDFPage() {
   const { id } = useParams<{ id: string }>();
@@ -26,14 +26,18 @@ export default function CvPDFPage() {
         setLoading(false);
         return;
       }
-      const fetchedProfile = ProfileModel.fromJson(JSON.stringify(response.data));
+      const fetchedProfile = ProfileModel.fromJson(
+        JSON.stringify(response.data)
+      );
       if (!fetchedProfile.id) {
         toast.error("Failed to fetch CV");
         setLoading(false);
         return;
       }
       setProfile(fetchedProfile);
-      setPdfSource(BASE_URL + "/storage/" + fetchedProfile.school_pay_account_id);
+      setPdfSource(
+        BASE_URL + "/storage/" + fetchedProfile.school_pay_account_id
+      );
 
       // Automatically record the view of the CV
       await submitViewRecord();
@@ -52,10 +56,10 @@ export default function CvPDFPage() {
       const response = await http_post("/view-record-create", payload);
       if (response.code === 1) {
         toast.success("View recorded successfully.");
-      } else { 
+      } else {
       }
     } catch (error: any) {
-/*       console.error("Error recording view:", error);
+      /*       console.error("Error recording view:", error);
       toast.error("Failed to record view: " + error.message); */
     }
   };
@@ -67,26 +71,25 @@ export default function CvPDFPage() {
   }, [id]);
 
   if (loading) {
-    return pageSkeleton();
+    return JobSkeleton();
   }
 
   return (
     <Content>
       <ol className="breadcrumb breadcrumb-item text-muted fs-6 fw-bold mb-5 mx-3">
-          <li className="breadcrumb-item pe-3">
-            <Link to="/" className="active text-decoration-none">
-              Home
-            </Link>
-          </li>
-          <li className="breadcrumb-item pe-3 ">
-            <Link to="/cv-bank" className="active text-decoration-none">
-              CVs
-            </Link>
-          </li>
-          <li className="breadcrumb-item px-3 text-muted ">{profile.name}</li>
-        </ol>
+        <li className="breadcrumb-item pe-3">
+          <Link to="/" className="active text-decoration-none">
+            Home
+          </Link>
+        </li>
+        <li className="breadcrumb-item pe-3 ">
+          <Link to="/cv-bank" className="active text-decoration-none">
+            CVs
+          </Link>
+        </li>
+        <li className="breadcrumb-item px-3 text-muted ">{profile.name}</li>
+      </ol>
       <div className="  shadow-sm my-4">
-      
         <ToolbarWrapper />
         <div className="card-body">
           <section className="pdf-viewer-container mb-4">
