@@ -28,6 +28,8 @@ export class JobModel {
   deadline: string = "";
   category_id: string = "";
   district_id: string = "";
+  district_text: string = "";
+  category_text: string = "";
   sub_county_id: string = "";
   address: string = "";
   vacancies_count: number = 0;

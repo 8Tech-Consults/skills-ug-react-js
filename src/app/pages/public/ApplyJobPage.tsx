@@ -37,7 +37,7 @@ const ApplyJobPage: React.FC = () => {
   useEffect(() => {
     if (!currentUser) {
       alert("Please login to apply for jobs.");
-      navigate("/login");
+      navigate("/auth/login");
       return;
     }
     const fetchJob = async () => {
@@ -359,7 +359,7 @@ const ApplyJobPage: React.FC = () => {
               <p>
                 <strong>Your Message:</strong>{" "}
                 {formData.applicantMessage || "Not provided"}
-              </p> 
+              </p>
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" data-bs-dismiss="modal">

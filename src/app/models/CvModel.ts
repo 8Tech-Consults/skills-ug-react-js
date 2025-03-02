@@ -147,6 +147,7 @@ export class CvModel {
   company_district_id!: string;
   company_sub_county_id!: string;
   company_main_category_id!: string;
+  district_text!: string;
   company_sub_category_id!: string;
   company_phone_number!: string;
   company_description!: string;

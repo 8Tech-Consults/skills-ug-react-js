@@ -681,7 +681,7 @@ const JobListingPage: React.FC = () => {
                           <small className="text-muted d-block">
                             <i className="bi bi-geo-alt-fill me-1"></i>
                             <strong>Location:</strong>{" "}
-                            {job.district_id || "N/A"}
+                            {job.district_text || "N/A"}
                           </small>
                         </div>
                         {/* Deadline */}

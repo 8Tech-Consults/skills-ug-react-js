@@ -15,13 +15,20 @@ import { WithChildren } from "../../../../_metronic/helpers";
 import { DB_TOKEN, DB_LOGGED_IN_PROFILE } from "../../../../Constants";
 import Utils from "../../../services/Utils";
 import { ProfileModel } from "../../../models/ProfileModel";
+import { ManifestModel } from "../../../models/Manifest";
+import { JobSeekerManifest } from "../../../models/JobSeekerManifest";
 
 type AuthContextProps = {
   auth: AuthModel | undefined;
   saveAuth: (auth: AuthModel | undefined) => void;
   currentUser: ProfileModel | undefined;
   setCurrentUser: Dispatch<SetStateAction<ProfileModel | undefined>>;
+  manifest: ManifestModel | undefined;
+  setManifest: Dispatch<SetStateAction<ManifestModel | undefined>>;
+  jobseekerManifest: JobSeekerManifest | undefined;
+  setJobseekerManifest: Dispatch<SetStateAction<JobSeekerManifest | undefined>>;
   logout: () => void;
+  fetchManifest: () => void;
 };
 
 const initAuthContextPropsState = {
@@ -29,8 +36,17 @@ const initAuthContextPropsState = {
   saveAuth: () => {},
   currentUser: undefined,
   setCurrentUser: () => {},
+  manifest: undefined,
+  setManifest: () => {
+
+  },
+  jobseekerManifest: undefined,
+  setJobseekerManifest: () => {},
   logout: () => {},
+  fetchManifest: () => {},
 };
+
+ 
 
 const AuthContext = createContext<AuthContextProps>(initAuthContextPropsState);
 
@@ -41,6 +57,11 @@ const useAuth = () => {
 const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth());
   const [currentUser, setCurrentUser] = useState<ProfileModel | undefined>();
+  const [manifest, setManifest] = useState<ManifestModel | undefined>();
+  const [jobseekerManifest, setJobseekerManifest] = useState<
+    JobSeekerManifest | undefined
+  >();
+
   const saveAuth = (auth: AuthModel | undefined) => {
     setAuth(auth);
     if (auth) {
@@ -49,6 +70,26 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
       authHelper.removeAuth();
     }
   };
+  
+
+  const fetchManifest = async () => {
+    alert("fetchManifest"); 
+    try {
+      const manifest = await ManifestModel.getItems();
+      setManifest(manifest);
+    } catch (error) {
+      console.error("Error fetching manifest:", error);
+    }
+
+    try {
+      if (currentUser) {
+        const jobseekerManifest = await JobSeekerManifest.getItems();
+        setJobseekerManifest(jobseekerManifest);
+      }
+    } catch (error) {
+      console.error("Error fetching jobseeker manifest:", error);
+    }
+  } 
 
   const logout = async () => {
     try {
@@ -61,11 +102,24 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
     }
     saveAuth(undefined);
     setCurrentUser(undefined);
+    setManifest(undefined);
+    setJobseekerManifest(undefined);
   };
 
   return (
     <AuthContext.Provider
-      value={{ auth, saveAuth, currentUser, setCurrentUser, logout }}
+      value={{
+        auth,
+        saveAuth,
+        currentUser,
+        setCurrentUser,
+        manifest,
+        setManifest,
+        jobseekerManifest,
+        setJobseekerManifest,
+        logout,
+        fetchManifest,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -73,26 +127,44 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
 };
 
 const AuthInit: FC<WithChildren> = ({ children }) => {
-  const { auth, currentUser, logout, setCurrentUser } = useAuth();
+  const { currentUser, setCurrentUser, setManifest, setJobseekerManifest } =
+    useAuth();
   const [showSplashScreen, setShowSplashScreen] = useState(true);
 
-  // We should request user by authToken (IN OUR EXAMPLE IT'S API_TOKEN) before rendering the application
+  const fetchManifest = async () => {
+    try {
+      const manifest = await ManifestModel.getItems();
+      (manifest.CATEGORIES.length > 0 ? manifest : undefined);
+      setManifest(manifest);
+    } catch (error) {
+      console.error("Error fetching manifest:", error);
+    }
+
+    try {
+      if (currentUser) {
+        const jobseekerManifest = await JobSeekerManifest.getItems();
+        setJobseekerManifest(jobseekerManifest);
+      }
+    } catch (error) {
+      console.error("Error fetching jobseeker manifest:", error);
+    }
+  };
+
   useEffect(() => {
     try {
       if (!currentUser) {
-        const data = Utils.loadFromDatabase(DB_LOGGED_IN_PROFILE);
-        if (data) {
-          setCurrentUser(data);
+        const userData = Utils.loadFromDatabase(DB_LOGGED_IN_PROFILE);
+        if (userData) {
+          setCurrentUser(userData);
         }
       }
+      fetchManifest();
     } catch (error) {
       console.error(error);
     } finally {
+      setShowSplashScreen(false);
     }
-
-    setShowSplashScreen(false);
-    // eslint-disable-next-line
-  }, []);
+  }, [currentUser, setCurrentUser, setManifest, setJobseekerManifest]);
 
   return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>;
 };

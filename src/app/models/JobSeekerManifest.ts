@@ -17,6 +17,8 @@ export class JobSeekerManifest {
   job_offers: any[] = [];
   job_applications: any[] = [];
   upcoming_interviews: any[] = [];
+  job_applications_list: any[] = [];
+  company_follows: any[] = []; 
   saved_jobs: any[] = [];
 
   /**

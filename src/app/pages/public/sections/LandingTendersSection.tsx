@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ManifestModel } from "../../../models/Manifest";
 import Utils from "../../../services/Utils";
+import { toast } from "react-toastify";
 
 /**
  * Single-file React component for "Tenders"
@@ -235,13 +236,18 @@ const LandingTendersSection: React.FC<LandingTendersSectionProps> = ({
                   </div>
                 </div>
                 <div className="card-footer">
-                  <small>{tender.description.substring(0, 40)}...</small>
+                  <small>{tender.orgName.substring(0, 40)}...</small>
                   <small className="deadline">
                     Deadline: {tender.deadline}
                   </small>
                 </div>
                 <Link
-                  to={`/tender/${tender.id}`}
+                  to="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Replace with your toast library call
+                    toast("Tenders coming soon");
+                  }}
                   className="stretched-link"
                   title="View Tender Details"
                 />
