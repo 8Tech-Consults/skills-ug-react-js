@@ -8,7 +8,7 @@ import { PageTitle } from "../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { ProfileModel } from "../../models/ProfileModel";
 import { BASE_URL } from "../../../Constants";
-import { JobSkeleton } from "./JobDetailPage";
+import { JobSkeleton, PageSkeleton } from "./JobDetailPage";
 
 export default function CvPDFPage() {
   const { id } = useParams<{ id: string }>();
@@ -69,11 +69,13 @@ export default function CvPDFPage() {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
   if (loading) {
-    return JobSkeleton();
+    return (
+      <Content>
+        <PageSkeleton />
+      </Content>
+    );
   }
-
   return (
     <Content>
       <ol className="breadcrumb breadcrumb-item text-muted fs-6 fw-bold mb-5 mx-3">

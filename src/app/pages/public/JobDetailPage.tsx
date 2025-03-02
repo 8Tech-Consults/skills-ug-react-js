@@ -20,7 +20,7 @@ import {
   WhatsappIcon,
 } from "react-share";
 
-export const JobSkeleton = () => (
+export const JobSkeleton: React.FC = () => (
   <div className="container py-4 px-2 px-lg-10">
     <div className="row mb-4 g-3">
       <div className="col-12 col-lg-8">
@@ -458,3 +458,25 @@ const JobDetailPage: React.FC = () => {
 };
 
 export default JobDetailPage;
+
+
+
+export const PageSkeleton: React.FC = () => ( 
+  <div className="container py-4 px-2 px-lg-10">
+    <div className="row mb-4 g-3">
+      <div className="col-12">
+        <Skeleton height={32} width="60%" />
+        <Skeleton height={20} width="40%" />
+      </div>
+    </div>
+
+    <div className="row gy-4">
+      <div className="col-12">
+        <div className="bg-white p-4 rounded shadow-sm mb-4">
+          <Skeleton height={24} width="30%" className="mb-3" />
+          <Skeleton count={10} />
+        </div>
+      </div>
+    </div>
+  </div>
+);

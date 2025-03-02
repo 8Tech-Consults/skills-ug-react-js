@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import Utils from "../../services/Utils";
 import { Link } from "react-router-dom";
-import { JobSkeleton } from "./JobDetailPage";
+import { JobSkeleton, PageSkeleton } from "./JobDetailPage";
 import { http_post } from "../../services/Api";
 import { useAuth } from "../../modules/auth";
 
@@ -60,7 +60,8 @@ const CvBankPage: React.FC<CvBankPageProps> = () => {
   // New state for the 'Offer Job' modal and conditional modals
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [showLoginRequiredModal, setShowLoginRequiredModal] = useState(false);
-  const [showCompanyRequiredModal, setShowCompanyRequiredModal] = useState(false);
+  const [showCompanyRequiredModal, setShowCompanyRequiredModal] =
+    useState(false);
   const [offerForm, setOfferForm] = useState({
     jobTitle: "",
     companyName: "",
@@ -163,7 +164,6 @@ const CvBankPage: React.FC<CvBankPageProps> = () => {
     setShowModal(true); // Re-open the CV details modal
   };
 
-
   const handleOfferFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -196,7 +196,7 @@ const CvBankPage: React.FC<CvBankPageProps> = () => {
   };
 
   if (isLoading) {
-    return JobSkeleton();
+    return <PageSkeleton />;
   }
 
   return (
@@ -727,7 +727,11 @@ const CvBankPage: React.FC<CvBankPageProps> = () => {
                     >
                       {isOfferLoading ? ( // Show loader if loading
                         <>
-                          <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          <span
+                            className="spinner-border spinner-border-sm me-2"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
                           Submitting...
                         </>
                       ) : (
@@ -774,7 +778,9 @@ const CvBankPage: React.FC<CvBankPageProps> = () => {
                 </div>
                 <div className="modal-body">
                   <p>You need to be logged in as a company to offer a job.</p>
-                  <p>Please <Link to="/login">login</Link> to continue.</p>
+                  <p>
+                    Please <Link to="/login">login</Link> to continue.
+                  </p>
                 </div>
                 <div className="modal-footer">
                   <Link to="/login" className="btn btn-primary">
@@ -818,10 +824,19 @@ const CvBankPage: React.FC<CvBankPageProps> = () => {
                 </div>
                 <div className="modal-body">
                   <p>You need to register as a company to offer a job.</p>
-                  <p>Please <Link to="/admin/company-profile-edit">register your company profile</Link> to continue.</p>
+                  <p>
+                    Please{" "}
+                    <Link to="/admin/company-profile-edit">
+                      register your company profile
+                    </Link>{" "}
+                    to continue.
+                  </p>
                 </div>
                 <div className="modal-footer">
-                  <Link to="/admin/company-profile-edit" className="btn btn-primary">
+                  <Link
+                    to="/admin/company-profile-edit"
+                    className="btn btn-primary"
+                  >
                     Register Company
                   </Link>
                   <button

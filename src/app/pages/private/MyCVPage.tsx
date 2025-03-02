@@ -5,8 +5,7 @@ import { http_get } from "../../services/Api";
 import { toast } from "react-toastify";
 import { ProfileModel } from "../../models/ProfileModel";
 import { BASE_URL } from "../../../Constants";
-import { pageSkeleton } from "../public/JobDetailPage";
-
+import { PageSkeleton } from "../public/JobDetailPage";
 export default function MyCVPage() {
   // Use a utility-provided file if available, otherwise fallback to the user's PDF URL.
 
@@ -46,7 +45,11 @@ export default function MyCVPage() {
   }, []);
 
   if (loading) {
-    return pageSkeleton();
+    return (
+      <Content>
+        <PageSkeleton />
+      </Content>
+    );
   }
 
   return (
