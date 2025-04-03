@@ -70,7 +70,7 @@ const JobListingPage: React.FC = () => {
     "Company A",
     "Company B",
     "Company C",
-    "Skills.ug",
+    "8jobspot.com",
     "Organization X",
   ];
   const dummySalaryRanges = [

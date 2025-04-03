@@ -18,7 +18,7 @@ export function MenuInner() {
         <Link className={clsx("menu-link p-0")} to={"/"}>
           <img
             src="/media/logos/loader.svg"
-            alt="Skills.ug logo"
+            alt="8jobspot.com logo"
             title="Home Page"
             style={{ width: "180px", height: "100px" }}
           />
@@ -48,34 +48,25 @@ export function MenuInner() {
       >
         <MenuItem
           hasBullet={true}
-          to="resources/career"
+          to="career-guidance"
           title="Career Guidance"
         />
         <MenuItem
           hasBullet={true}
-          to="resources/interview-tips"
+          to="interview-tips"
           title="Interview Tips"
         />
+       
         <MenuItem
           hasBullet={true}
-          to="resources/resume"
-          title="Resume Writing Tips"
-        />
-        <MenuItem
-          hasBullet={true}
-          to="resources/cover-letter"
+          to="cover-letter"
           title="Cover Letter"
         />
         <MenuItem
           hasBullet={true}
-          to="resources/salary-guide"
+          to="salary-guide"
           title="Salary Guide"
-        />
-        <MenuItem
-          hasBullet={true}
-          to="resources/assessment"
-          title="Education Assessment"
-        />
+        /> 
       </MenuInnerWithSub>
     </>
   );

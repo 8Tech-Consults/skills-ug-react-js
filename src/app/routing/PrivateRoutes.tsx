@@ -82,6 +82,11 @@ const PrivateRoutes = () => {
           return;
         }
       }
+    } else {
+      // If user is not logged in, redirect to login page
+      toast.error("Please login to continue.");
+      navigate("/auth/login");
+      return;
     }
 
     var shouldSetPrivateLayout = false;

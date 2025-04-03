@@ -39,14 +39,7 @@ const AppRoutes: FC = () => {
           <Route path="auth/*" element={<AuthPage />} />
           <Route path="error/*" element={<ErrorsPage />} />
           <Route path="logout" element={<Logout />} />
-
-          {currentUser ? (
-            <>
-              <Route path="admin/*" element={<PrivateRoutes />} />
-            </>
-          ) : (
-            <></>
-          )}
+          <Route path="admin/*" element={<PrivateRoutes />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -12,8 +12,8 @@ const slides = [
   {
     title: "Customize Everything",
     description:
-      "Customize your profile, job preference, and everything to get a better job in shorter time with Skills.ug.",
-    buttonLabel: "Join Skills.ug",
+      "Customize your profile, job preference, and everything to get a better job in shorter time with 8jobspot.com.",
+    buttonLabel: "Join 8jobspot.com",
     backgroundImage: "https://bdjobs.com/images/mybdjobs-bg.jpg",
   },
   {

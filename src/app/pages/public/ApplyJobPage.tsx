@@ -328,7 +328,7 @@ const ApplyJobPage: React.FC = () => {
             </p>
             <hr />
             <p>
-              Skills.ug will not be responsible for any financial transactions
+              8jobspot.com will not be responsible for any financial transactions
               or fraud by the company after applying through the website. This
               platform only connects companies and job seekers.
             </p>
