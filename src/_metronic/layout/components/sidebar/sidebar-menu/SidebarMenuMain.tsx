@@ -23,6 +23,49 @@ const SidebarMenuMain = () => {
       />
 
       <SidebarMenuItemWithSub
+        to="/services"
+        title="Service Marketplace"
+        hasBullet={false}
+        icon="media/icons/duotune/technology/teh007.svg"
+        fontIcon="bi-briefcase"
+      >
+        <SidebarMenuItem
+          to="/services"
+          title="Browse Services"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/services/categories"
+          title="Service Categories"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+
+      <SidebarMenuItemWithSub
+        to="/learning/courses"
+        title="8Learning"
+        hasBullet={false}
+        icon="media/icons/duotune/graphs/gra006.svg"
+        fontIcon="bi-mortarboard"
+      >
+        <SidebarMenuItem
+          to="/learning/courses"
+          title="Browse Courses"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/learning/my-courses"
+          title="My Courses"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/learning/dashboard"
+          title="Learning Dashboard"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+
+      <SidebarMenuItemWithSub
         to="/crafted/pages/profile"
         title="My Activities"
         hasBullet={false}

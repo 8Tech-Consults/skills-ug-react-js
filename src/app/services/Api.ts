@@ -28,19 +28,26 @@ async function handleAuth(path: string, params: Record<string, any>) {
     const resp = await http_post(path, params);
     saveUserData(resp);
     return resp;
-  } catch (error) {
+  } catch (error: any) {
+    console.error(`Authentication error for ${path}:`, error);
+    // Check if it's an API error with a message
+    if (error?.message) {
+      throw new Error(error.message);
+    }
     throw new Error(`${path.split("/").pop()} failed: ${error}`);
   }
 }
 
 // Save user data to local storage
 interface UserResponse {
-  remember_token: string;
+  token: string;
+  remember_token?: string;
   [key: string]: any;
 }
 
 function saveUserData(resp: UserResponse) {
-  const token = resp.remember_token;
+  // Backend returns 'token', but also check for 'remember_token' as fallback
+  const token = resp.token || resp.remember_token;
   if (!token || token.length <= 5) {
     throw new Error("Invalid token received");
   }
@@ -79,14 +86,24 @@ export const http_post = async (path: string, params: Record<string, any>) => {
   try {
     const response = await api.post(path, params, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
         Accept: "application/json",
       },
     });
     return handleResponse(response);
-  } catch (error) {
+  } catch (error: any) {
     console.error("POST request failed:", error);
-    throw new Error("" + error);
+    
+    // Check if we have a response with backend error structure
+    if (error?.response?.data) {
+      const errorData = error.response.data;
+      if (errorData.code !== undefined && errorData.message) {
+        throw new Error(errorData.message);
+      }
+    }
+    
+    // Fallback to generic error
+    throw new Error(error?.message || "Request failed");
   }
 };
 

@@ -1,6 +1,6 @@
 export const BASE_URL = "https://skills-ug-api.8technologies.net";
-// export const BASE_URL = "http://localhost:8888/skills-ug-web";
-export const API_URL = BASE_URL + "/api";
+// export const BASE_URL = "http://127.0.0.1:8000";
+export const API_URL = BASE_URL + "/api"; 
 export const TIMEOUT = 5000;
 export const MAX_RETRIES = 3;
 export const DATE_FORMAT = "YYYY-MM-DD";

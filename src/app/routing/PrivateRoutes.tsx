@@ -64,6 +64,14 @@ const PrivateRoutes = () => {
     () => import("../modules/apps/user-management/UsersPage")
   );
 
+  // Service Marketplace Pages
+  const ServicesPage = lazy(() => import("../modules/services/ServicesPage"));
+  const ServiceDetailsPage = lazy(() => import("../modules/services/ServiceDetailsPage"));
+
+  // Eight Learning Pages
+  const CoursesPage = lazy(() => import("../modules/learning/CoursesPage"));
+  const CourseDetailsPage = lazy(() => import("../modules/learning/CourseDetailsPage"));
+
   const [tab, setTab] = useState("Sidebar");
   const [config, setConfig] = useState<ILayout>(adminLayoutConfig);
   const [configLoading, setConfigLoading] = useState<boolean>(false);
@@ -314,6 +322,42 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <UsersPage />
+            </SuspensedView>
+          }
+        />
+        
+        {/* Service Marketplace Routes */}
+        <Route
+          path="services"
+          element={
+            <SuspensedView>
+              <ServicesPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="services/:id"
+          element={
+            <SuspensedView>
+              <ServiceDetailsPage />
+            </SuspensedView>
+          }
+        />
+
+        {/* Eight Learning Routes */}
+        <Route
+          path="learning/courses"
+          element={
+            <SuspensedView>
+              <CoursesPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="learning/courses/:courseId"
+          element={
+            <SuspensedView>
+              <CourseDetailsPage />
             </SuspensedView>
           }
         />
