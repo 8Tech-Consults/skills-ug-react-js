@@ -73,7 +73,7 @@ export function Login() {
     >
       <div className="text-center mb-11">
         <div className="text-gray-500 fw-semibold fs-6">Welcome Back</div>
-        <h1 className="text-gray-900 fw-bolder mb-3 mt-1">Skills Uganda</h1>
+        <h1 className="text-gray-900 fw-bolder mb-3 mt-1">8Jobspotanda</h1>
         <Link to="/" className="mb-12">
           <img
             alt="Logo"
